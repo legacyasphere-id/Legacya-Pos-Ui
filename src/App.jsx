@@ -1,6 +1,6 @@
 import React from 'react'
-import Dashboard from '../artifacts/02-dashboard.jsx'
+import Operations from '../artifacts/03-operations.jsx'
 
 export default function App() {
-  return <Dashboard />
+  return <Operations />
 }
