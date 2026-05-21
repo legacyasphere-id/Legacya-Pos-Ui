@@ -421,4 +421,270 @@ const DesignSystemView = () => (
         </div>
         <div className="p-2 divide-y divide-[#F1F5F9]">
           {mockInsights.map((i) => <InsightCard key={i.id} insight={i} />)}
-        <
+               </div>
+      </Card>
+    </section>
+
+    {/* Color tokens */}
+    <section>
+      <SectionHeader title="Color tokens" hint="Light theme · semantic naming" />
+      <Card className="p-5">
+        <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-4">
+          {[
+            ['Primary',      '#4A7FA7', 'primary'],
+            ['Primary Soft', '#DCEAF5', 'primarySoft'],
+            ['Background',   '#F6F9FC', 'bg'],
+            ['Text Main',    '#1E293B', 'textMain'],
+            ['Text Soft',    '#64748B', 'textSoft'],
+            ['Border',       '#E2E8F0', 'border'],
+            ['Success',      '#22C55E', 'success'],
+            ['Warning',      '#F59E0B', 'warning'],
+            ['Danger',       '#EF4444', 'danger'],
+            ['Card',         '#FFFFFF', 'card'],
+          ].map(([name, hex, key]) => (
+            <div key={key} className="flex flex-col gap-2">
+              <div className="aspect-[5/3] rounded-xl border border-[#E2E8F0]" style={{ background: hex }} />
+              <div>
+                <p className="text-[12.5px] font-semibold text-[#1E293B]">{name}</p>
+                <p className="text-[11px] text-[#94A3B8] font-mono tabular-nums">{hex}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </section>
+
+    {/* Typography */}
+    <section>
+      <SectionHeader title="Typography scale" hint="Plus Jakarta Sans (display) · Inter (body) · tabular-nums (data)" />
+      <Card className="p-6 space-y-5">
+        <TypeRow label="Display / 32" weight="700" size={32} family="Plus Jakarta Sans">Rp 4,280,000</TypeRow>
+        <TypeRow label="H1 / 24"      weight="700" size={24} family="Plus Jakarta Sans">Dashboard overview</TypeRow>
+        <TypeRow label="H2 / 18"      weight="600" size={18} family="Plus Jakarta Sans">Today's insights</TypeRow>
+        <TypeRow label="Body / 14"    weight="500" size={14} family="Inter">The quick brown fox jumps over the lazy dog.</TypeRow>
+        <TypeRow label="Caption / 12" weight="500" size={12} family="Inter" color="#64748B">Updated 2 minutes ago · 142 orders synced</TypeRow>
+        <TypeRow label="Mono / 14"    weight="500" size={14} family="Inter" mono>ORD-1042 · 11:42 WIB · Rp 116,000</TypeRow>
+      </Card>
+    </section>
+
+    {/* Components */}
+    <section>
+      <SectionHeader title="Base components" hint="Buttons · badges · status pills" />
+      <Card className="p-6 space-y-6">
+        {/* Buttons */}
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#94A3B8] mb-3">Buttons</p>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Button variant="primary" icon={Plus}>Primary</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="soft" icon={Sparkles}>Soft</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="danger">Danger</Button>
+            <Button variant="primary" size="sm">Small</Button>
+            <Button variant="primary" size="lg">Large CTA</Button>
+          </div>
+        </div>
+
+        {/* Badges */}
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#94A3B8] mb-3">Badges</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge>Neutral</Badge>
+            <Badge tone="primary">Sales</Badge>
+            <Badge tone="success" dot>Paid</Badge>
+            <Badge tone="warning" dot>Low stock</Badge>
+            <Badge tone="danger" dot>Critical</Badge>
+          </div>
+        </div>
+
+        {/* Order status pills (preview of POS / Kitchen pattern) */}
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#94A3B8] mb-3">Order status</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge tone="neutral" dot>Pending</Badge>
+            <Badge tone="warning" dot>Cooking</Badge>
+            <Badge tone="primary" dot>Ready</Badge>
+            <Badge tone="success" dot>Paid</Badge>
+          </div>
+        </div>
+
+        {/* Interactive feedback */}
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#94A3B8] mb-3">States</p>
+          <div className="flex flex-wrap gap-3">
+            <div className="px-3.5 py-2.5 rounded-lg bg-[#DCFCE7] border border-[#86EFAC] text-[#15803D] text-[12.5px] font-medium inline-flex items-center gap-2">
+              <Check size={14} /> Order ORD-1042 saved
+            </div>
+            <div className="px-3.5 py-2.5 rounded-lg bg-[#FEF3C7] border border-[#FCD34D] text-[#B45309] text-[12.5px] font-medium inline-flex items-center gap-2">
+              <AlertTriangle size={14} /> 6 items low on stock
+            </div>
+            <div className="px-3.5 py-2.5 rounded-lg bg-[#FEE2E2] border border-[#FCA5A5] text-[#B91C1C] text-[12.5px] font-medium inline-flex items-center gap-2">
+              <AlertTriangle size={14} /> Connection lost · retrying
+            </div>
+          </div>
+        </div>
+      </Card>
+    </section>
+
+    {/* Phase roadmap */}
+    <section>
+      <SectionHeader title="Execution roadmap" hint="What ships in each phase" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <RoadmapCard phase="1" status="done"    title="Foundation" items={['Design tokens', 'Typography', 'Base components', 'Layout shell', 'Mock data']} />
+        <RoadmapCard phase="2" status="next"    title="Core screens" items={['Dashboard', 'POS Cashier', 'Orders list', 'Kitchen Display']} />
+        <RoadmapCard phase="3" status="planned" title="Supporting" items={['Inventory', 'Menu mgmt', 'Analytics', 'Notifications', 'Settings']} />
+      </div>
+    </section>
+  </div>
+);
+
+const SectionHeader = ({ title, hint }) => (
+  <div className="flex items-baseline justify-between mb-3 px-1">
+    <h3 className="text-[13px] font-bold text-[#1E293B] tracking-wide uppercase" style={{ fontFamily: 'Plus Jakarta Sans' }}>
+      {title}
+    </h3>
+    {hint && <p className="text-[11.5px] text-[#94A3B8]">{hint}</p>}
+  </div>
+);
+
+const TypeRow = ({ label, weight, size, family, color = '#1E293B', mono, children }) => (
+  <div className="flex items-baseline gap-6 pb-4 border-b border-[#F1F5F9] last:border-0 last:pb-0">
+    <div className="w-32 shrink-0">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-[#94A3B8]">{label}</p>
+      <p className="text-[10px] text-[#CBD5E1] font-mono mt-0.5">{family} · {weight}</p>
+    </div>
+    <p
+      className={mono ? 'tabular-nums' : ''}
+      style={{ fontSize: size, fontWeight: weight, fontFamily: family, color, letterSpacing: size > 20 ? '-0.02em' : 'normal' }}
+    >
+      {children}
+    </p>
+  </div>
+);
+
+const RoadmapCard = ({ phase, status, title, items }) => {
+  const statusMap = {
+    done:    { label: 'Shipped', tone: 'success', accent: '#22C55E' },
+    next:    { label: 'Next',    tone: 'primary', accent: '#4A7FA7' },
+    planned: { label: 'Planned', tone: 'neutral', accent: '#CBD5E1' },
+  };
+  const meta = statusMap[status];
+  return (
+    <Card className="p-5 relative overflow-hidden">
+      <span className="absolute top-0 left-0 right-0 h-0.5" style={{ background: meta.accent }} />
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-[11px] font-bold text-[#94A3B8] tracking-wider">PHASE {phase}</span>
+        <Badge tone={meta.tone} dot={status === 'done'}>{meta.label}</Badge>
+      </div>
+      <h4 className="text-[16px] font-bold text-[#1E293B] mb-3" style={{ fontFamily: 'Plus Jakarta Sans' }}>{title}</h4>
+      <ul className="space-y-1.5">
+        {items.map((item) => (
+          <li key={item} className="flex items-center gap-2 text-[13px] text-[#64748B]">
+            {status === 'done'
+              ? <Check size={13} className="text-[#22C55E] shrink-0" strokeWidth={2.8} />
+              : <Dot size={16} className="text-[#CBD5E1] shrink-0" />}
+            {item}
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+};
+
+/* -------------------------------------------------------------------------
+   PLACEHOLDER VIEW for non-Phase-1 routes
+   ------------------------------------------------------------------------- */
+const PlaceholderView = ({ page }) => (
+  <div className="min-h-[60vh] flex items-center justify-center">
+    <Card className="p-10 text-center max-w-md">
+      <div className="w-14 h-14 mx-auto rounded-2xl bg-[#DCEAF5] flex items-center justify-center mb-4">
+        <Sparkles size={22} className="text-[#3A6588]" />
+      </div>
+      <h3 className="text-[18px] font-bold text-[#1E293B] mb-1.5" style={{ fontFamily: 'Plus Jakarta Sans' }}>
+        {page.label} — Phase {page.phase}
+      </h3>
+      <p className="text-[13.5px] text-[#64748B] leading-relaxed mb-5">
+        This screen ships in <span className="font-semibold text-[#1E293B]">Phase {page.phase}</span>.
+        The shell, tokens, and base components are ready — drop the screen in when you're ready.
+      </p>
+      <Button variant="soft" icon={Sparkles}>Generate this screen next</Button>
+    </Card>
+  </div>
+);
+
+/* -------------------------------------------------------------------------
+   APP SHELL
+   ------------------------------------------------------------------------- */
+const pageMap = {
+  'design-system':  { label: 'Design System',    phase: 1, meta: 'Foundation tokens & shell' },
+  dashboard:        { label: 'Dashboard',        phase: 2, meta: 'Owner overview' },
+  pos:              { label: 'POS Cashier',      phase: 2, meta: 'Tablet landscape · counter mode' },
+  orders:           { label: 'Orders',           phase: 2, meta: 'All orders · filter by status' },
+  kitchen:          { label: 'Kitchen Display',  phase: 2, meta: 'Wall-mounted queue' },
+  inventory:        { label: 'Inventory',        phase: 3, meta: 'Stock management' },
+  menu:             { label: 'Menu',             phase: 3, meta: 'Catalog & pricing' },
+  analytics:        { label: 'Analytics',        phase: 3, meta: 'Trends & comparisons' },
+  notifications:    { label: 'Notifications',    phase: 3, meta: 'Activity feed' },
+  settings:         { label: 'Settings',         phase: 3, meta: 'Store config' },
+};
+
+export default function LegacyaPos() {
+  const [activePage, setActivePage] = useState('design-system');
+  const [collapsed, setCollapsed] = useState(false);
+
+  // Inject Google Fonts once
+  useEffect(() => {
+    if (document.getElementById('legacyapos-fonts')) return;
+    const link = document.createElement('link');
+    link.id = 'legacyapos-fonts';
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap';
+    document.head.appendChild(link);
+  }, []);
+
+  const page = pageMap[activePage] ?? pageMap['design-system'];
+
+  // Convenience: also use "dashboard" as a target for the design-system view's hidden menu
+  // Phase 1 always renders the design system showcase.
+  const isPhase1View = activePage === 'design-system';
+
+  return (
+    <div
+      className="flex h-screen w-full overflow-hidden text-[#1E293B] antialiased"
+      style={{ background: tokens.color.bg, fontFamily: 'Inter, system-ui, sans-serif' }}
+    >
+      <Sidebar
+        activePage={activePage}
+        setActivePage={(id) => {
+          // Map sidebar IDs to a "design-system" landing for now; otherwise show placeholder
+          setActivePage(id);
+        }}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+      />
+
+      <div className="flex-1 flex flex-col min-w-0">
+        <Topbar pageTitle={page.label} pageMeta={page.meta} />
+
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-[1400px] mx-auto px-6 py-6">
+            {/* Phase 1 — always show design system regardless of route, OR show placeholder for other phases */}
+            {isPhase1View
+              ? <DesignSystemView />
+              : <PlaceholderView page={page} />}
+          </div>
+        </main>
+      </div>
+
+      {/* Hidden access to design system view */}
+      <button
+        onClick={() => setActivePage('design-system')}
+        className="fixed bottom-5 right-5 px-3 h-9 rounded-full bg-[#1E293B] text-white text-[12px] font-medium inline-flex items-center gap-2 hover:bg-[#0F172A] transition-colors z-50"
+        style={{ boxShadow: tokens.shadow.lg }}
+      >
+        <Sparkles size={13} />
+        View design system
+      </button>
+    </div>
+  );
+}
