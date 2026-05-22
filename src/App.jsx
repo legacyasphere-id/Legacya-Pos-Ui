@@ -1,6 +1,6 @@
 import React from 'react'
-import Operations from '../artifacts/03-operations.jsx'
+import Management from '../artifacts/04-management.jsx'
 
 export default function App() {
-  return <Operations />
+  return <Management />
 }
