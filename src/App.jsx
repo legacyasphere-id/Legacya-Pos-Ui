@@ -1,6 +1,6 @@
 import React from 'react'
-import System from '../artifacts/05-system.jsx'
+import Dashboard from '../artifacts/02-dashboard.jsx'
 
 export default function App() {
-  return <System />
+  return <Dashboard />
 }
