@@ -13,6 +13,10 @@
 </div>
 
 ---
+## 🔗 Live Demo
+https://legacya-pos-ui-129q.vercel.app
+
+---
 
 ## ✦ Why this project exists
 
