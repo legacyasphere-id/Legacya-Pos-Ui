@@ -18,6 +18,9 @@
     "date-fns": "^3.6.0",
     "clsx": "^2.1.0"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "devDependencies": {
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
