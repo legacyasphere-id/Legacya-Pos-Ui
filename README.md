@@ -189,7 +189,7 @@ npm run dev
 
 ## ✦ Credits
 
-Designed & built by **[Your Name]** — AI fullstack designer-engineer.
+Designed & built by **[Yoga Pratama Effendi]** — AI fullstack designer-engineer.
 
 Built with intentional care for taste, hierarchy, and the boring details (spacing, alignment, transitions) that separate generic admin UIs from real products.
 
