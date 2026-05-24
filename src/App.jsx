@@ -1,7 +1,6 @@
-import React from 'react';
-import { RouterProvider } from 'react-router-dom';
-import { router } from './router';
+import React from 'react'
+import Dashboard from '../artifacts/02-dashboard.jsx'
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return <Dashboard />
 }
