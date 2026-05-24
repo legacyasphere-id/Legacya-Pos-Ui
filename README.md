@@ -20,17 +20,9 @@ https://legacya-pos-ui-129q.vercel.app
 
 ## ✦ Screenshots
 
-<div align="center">
-  <img src="docs/screenshots/dashboard.png" width="32%" alt="Dashboard — owner overview with AI insights"/>
-  &nbsp;
-  <img src="docs/screenshots/cashier.png" width="32%" alt="POS Cashier — two-pane tablet layout"/>
-  &nbsp;
-  <img src="docs/screenshots/kitchen.png" width="32%" alt="Kitchen Display — live order queue with urgency tiers"/>
-</div>
-
-<div align="center">
-  <sub><b>Dashboard</b> — owner overview · &nbsp; <b>POS Cashier</b> — two-pane tablet layout · &nbsp; <b>Kitchen Display</b> — live urgency queue</sub>
-</div>
+| Dashboard | POS Cashier | Kitchen Display |
+|-----------|-------------|-----------------|
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Cashier](docs/screenshots/cashier.png) | ![Kitchen](docs/screenshots/kitchen.png) |
 
 ---
 
