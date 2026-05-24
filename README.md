@@ -160,8 +160,8 @@ Analytics, Inventory, Menu Management
 Notifications, Settings
 
 **Roadmap (optional)**
-- 🔲 Bundle as full Vite project with Zustand store & React Router
-- 🔲 Deploy live demo (Vercel)
+- ✅ Bundle as full Vite project with Zustand store & React Router
+- ✅ Deploy live demo (Vercel)
 - 🔲 Full case study write-up
 - 🔲 Loom walkthrough
 
@@ -193,7 +193,7 @@ Designed & built by **[Yoga Pratama Effendi]** — AI fullstack designer-enginee
 
 Built with intentional care for taste, hierarchy, and the boring details (spacing, alignment, transitions) that separate generic admin UIs from real products.
 
-> _If you're hiring or want to collaborate, find me at [your-link]._
+> _If you're hiring or want to collaborate, find me at [https://github.com/legacyasphere-id]._
 
 ---
 
