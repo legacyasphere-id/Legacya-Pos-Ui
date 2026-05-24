@@ -18,6 +18,22 @@ https://legacya-pos-ui-129q.vercel.app
 
 ---
 
+## ✦ Screenshots
+
+<div align="center">
+  <img src="docs/screenshots/dashboard.png" width="32%" alt="Dashboard — owner overview with AI insights"/>
+  &nbsp;
+  <img src="docs/screenshots/cashier.png" width="32%" alt="POS Cashier — two-pane tablet layout"/>
+  &nbsp;
+  <img src="docs/screenshots/kitchen.png" width="32%" alt="Kitchen Display — live order queue with urgency tiers"/>
+</div>
+
+<div align="center">
+  <sub><b>Dashboard</b> — owner overview · &nbsp; <b>POS Cashier</b> — two-pane tablet layout · &nbsp; <b>Kitchen Display</b> — live urgency queue</sub>
+</div>
+
+---
+
 ## ✦ Why this project exists
 
 Most "POS UI" mockups stop at a pretty dashboard. LegacyaPos is built to demonstrate **product depth** — three distinct user roles, real interaction patterns, AI-informed actions, and 9 fully designed screens that share one cohesive design system.
@@ -113,7 +129,7 @@ legacyapos/
     └── 05-system.jsx              # Phase 4 — Notifications + Settings
 ```
 
-> Each artifact is a self-contained React component runnable in any Vite + Tailwind project. Drop into `src/App.jsx`, install deps (`recharts`, `lucide-react`, `recharts`), and it renders.
+> Each artifact is a self-contained React component runnable in any Vite + Tailwind project. Drop into `src/App.jsx`, install deps (`recharts`, `lucide-react`), and it renders.
 
 ---
 
@@ -160,8 +176,8 @@ Analytics, Inventory, Menu Management
 Notifications, Settings
 
 **Roadmap (optional)**
-- 🔲 Bundle as full Vite project with Zustand store & React Router
-- 🔲 Deploy live demo (Vercel)
+- ✅ Bundle as full Vite project with Zustand store & React Router
+- ✅ Deploy live demo (Vercel)
 - 🔲 Full case study write-up
 - 🔲 Loom walkthrough
 
@@ -189,11 +205,11 @@ npm run dev
 
 ## ✦ Credits
 
-Designed & built by **[Your Name]** — AI fullstack designer-engineer.
+Designed & built by **[Yoga P. Effendi](https://github.com/legacyasphere-id)** — AI fullstack designer-engineer.
 
 Built with intentional care for taste, hierarchy, and the boring details (spacing, alignment, transitions) that separate generic admin UIs from real products.
 
-> _If you're hiring or want to collaborate, find me at [your-link]._
+> _If you're hiring or want to collaborate, find me at [github.com/legacyasphere-id](https://github.com/legacyasphere-id)._
 
 ---
 
