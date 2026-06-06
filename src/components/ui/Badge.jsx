@@ -1,19 +1,19 @@
 import React from 'react';
 
 const tones = {
-  neutral: 'bg-[#F1F5F9] text-[#475569]',
-  primary: 'bg-[#DCEAF5] text-[#3A6588]',
-  success: 'bg-[#DCFCE7] text-[#15803D]',
-  warning: 'bg-[#FEF3C7] text-[#B45309]',
-  danger:  'bg-[#FEE2E2] text-[#B91C1C]',
+  neutral: 'bg-surface text-ink-strong',
+  primary: 'bg-primary-soft text-primary-text',
+  success: 'bg-success-soft text-success-text',
+  warning: 'bg-warning-soft text-warning-text',
+  danger:  'bg-danger-soft text-danger-text',
 };
 
 const dotColors = {
-  neutral: 'bg-slate-400',
-  primary: 'bg-[#4A7FA7]',
-  success: 'bg-[#22C55E]',
-  warning: 'bg-[#F59E0B]',
-  danger:  'bg-[#EF4444]',
+  neutral: 'bg-ink-muted',
+  primary: 'bg-primary',
+  success: 'bg-success',
+  warning: 'bg-warning',
+  danger:  'bg-danger',
 };
 
 const sizes = {

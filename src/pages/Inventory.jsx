@@ -24,17 +24,17 @@ const inventoryItems = [
 ];
 
 const statusMeta = {
-  critical: { tone:'danger',  label:'Critical', barBg:'bg-[#EF4444]' },
-  low:      { tone:'warning', label:'Low',      barBg:'bg-[#F59E0B]' },
-  ok:       { tone:'success', label:'OK',       barBg:'bg-[#22C55E]' },
+  critical: { tone:'danger',  label:'Critical', barBg:'bg-danger' },
+  low:      { tone:'warning', label:'Low',      barBg:'bg-warning' },
+  ok:       { tone:'success', label:'OK',       barBg:'bg-success' },
 };
 
 const InvStat = ({ label, value, icon:Icon, tone }) => {
   const styles = {
-    neutral:{ bg:'bg-white', iconBg:'bg-[#F6F9FC]', iconColor:'text-[#64748B]', border:'border-[#E2E8F0]' },
-    danger: { bg:'bg-[#FEF2F2]', iconBg:'bg-[#FEE2E2]', iconColor:'text-[#B91C1C]', border:'border-[#FECACA]' },
-    warning:{ bg:'bg-[#FFFBEB]', iconBg:'bg-[#FEF3C7]', iconColor:'text-[#B45309]', border:'border-[#FDE68A]' },
-    success:{ bg:'bg-[#F0FDF4]', iconBg:'bg-[#DCFCE7]', iconColor:'text-[#15803D]', border:'border-[#BBF7D0]' },
+    neutral:{ bg:'bg-card', iconBg:'bg-app', iconColor:'text-ink-soft', border:'border-line' },
+    danger: { bg:'bg-danger-faint', iconBg:'bg-danger-soft', iconColor:'text-danger-text', border:'border-danger-border' },
+    warning:{ bg:'bg-warning-faint', iconBg:'bg-warning-soft', iconColor:'text-warning-text', border:'border-warning-border' },
+    success:{ bg:'bg-success-faint', iconBg:'bg-success-soft', iconColor:'text-success-text', border:'border-success-border' },
   };
   const s = styles[tone];
   return (
@@ -43,8 +43,8 @@ const InvStat = ({ label, value, icon:Icon, tone }) => {
         <Icon size={17} strokeWidth={2.2} className={s.iconColor}/>
       </div>
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-[#64748B]">{label}</p>
-        <p className="text-[20px] font-bold tabular-nums leading-none text-[#1E293B] mt-0.5" style={{ fontFamily:'Plus Jakarta Sans' }}>{value}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-soft">{label}</p>
+        <p className="text-[20px] font-bold tabular-nums leading-none text-ink mt-0.5" style={{ fontFamily:'Plus Jakarta Sans' }}>{value}</p>
       </div>
     </div>
   );
@@ -69,18 +69,18 @@ const InventoryView = () => {
 
   return (
     <div className="space-y-4">
-      <Card className="p-4 border-l-4 border-l-[#F59E0B] flex items-start gap-3 bg-gradient-to-r from-[#FFFBEB] to-white">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#4A7FA7] to-[#3A6588] flex items-center justify-center shrink-0">
+      <Card className="p-4 border-l-4 border-l-warning flex items-start gap-3 bg-gradient-to-r from-warning-faint to-card">
+        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary-deep flex items-center justify-center shrink-0">
           <Sparkles size={16} className="text-white"/>
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
             <Badge tone="primary">AI prediction</Badge>
-            <span className="text-[10px] text-[#94A3B8] uppercase tracking-wider font-medium">High confidence</span>
+            <span className="text-[10px] text-ink-muted uppercase tracking-wider font-medium">High confidence</span>
           </div>
-          <p className="text-[13.5px] font-semibold text-[#1E293B]">
+          <p className="text-[13.5px] font-semibold text-ink">
             Burger Bun will run out in ~<span className="tabular-nums">8 hours</span> at current burn rate.
-            <span className="text-[#64748B] font-normal"> Restock urgently or pause affected menu.</span>
+            <span className="text-ink-soft font-normal"> Restock urgently or pause affected menu.</span>
           </p>
         </div>
         <Button variant="primary" size="sm" icon={Truck}>Restock now</Button>
@@ -94,8 +94,8 @@ const InventoryView = () => {
       </div>
 
       <Card className="overflow-hidden">
-        <div className="flex items-center gap-3 p-4 border-b border-[#EEF2F7] flex-wrap">
-          <div className="flex items-center gap-0.5 bg-[#F6F9FC] rounded-lg p-0.5">
+        <div className="flex items-center gap-3 p-4 border-b border-line-soft flex-wrap">
+          <div className="flex items-center gap-0.5 bg-app rounded-lg p-0.5">
             {[
               { id:'all',      label:'All',      count:counts.all },
               { id:'critical', label:'Critical', count:counts.critical },
@@ -104,20 +104,20 @@ const InventoryView = () => {
             ].map(t => (
               <button key={t.id} onClick={() => setFilter(t.id)}
                 className={`px-3 h-8 rounded-md text-[12px] font-semibold transition-colors inline-flex items-center gap-1.5 ${
-                  filter===t.id ? 'bg-white text-[#1E293B] shadow-sm' : 'text-[#64748B] hover:text-[#1E293B]'
+                  filter===t.id ? 'bg-card text-ink shadow-sm' : 'text-ink-soft hover:text-ink'
                 }`}>
                 {t.label}
                 <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold tabular-nums ${
-                  filter===t.id ? 'bg-[#DCEAF5] text-[#3A6588]' : 'bg-[#E2E8F0] text-[#64748B]'
+                  filter===t.id ? 'bg-primary-soft text-primary-text' : 'bg-line text-ink-soft'
                 }`}>{t.count}</span>
               </button>
             ))}
           </div>
           <div className="relative flex-1 max-w-xs">
-            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]"/>
+            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"/>
             <input value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search items…"
-              className="w-full h-9 pl-9 pr-3 rounded-lg bg-[#F6F9FC] text-[12.5px] border border-transparent focus:outline-none focus:border-[#4A7FA7] focus:bg-white transition-all"/>
+              className="w-full h-9 pl-9 pr-3 rounded-lg bg-app text-[12.5px] border border-transparent focus:outline-none focus:border-primary focus:bg-card transition-all"/>
           </div>
           <div className="ml-auto flex items-center gap-2">
             <Button variant="ghost"     size="sm" icon={History}>History</Button>
@@ -129,7 +129,7 @@ const InventoryView = () => {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-[10.5px] font-semibold text-[#94A3B8] uppercase tracking-wider bg-[#F8FAFC]">
+              <tr className="text-[10.5px] font-semibold text-ink-muted uppercase tracking-wider bg-surface-2">
                 <th className="text-left px-5 py-2.5">Item</th>
                 <th className="text-left px-3 py-2.5 w-[260px]">Current stock</th>
                 <th className="text-right px-3 py-2.5">Min</th>
@@ -147,44 +147,44 @@ const InventoryView = () => {
                 const etaDays = item.current / item.burnRate;
                 const etaStr = etaDays < 1 ? `${Math.round(etaDays * 24)}h` : `${etaDays.toFixed(1)}d`;
                 return (
-                  <tr key={item.id} className="text-[13px] hover:bg-[#F8FAFC] transition-colors border-t border-[#F1F5F9]">
+                  <tr key={item.id} className="text-[13px] hover:bg-surface-2 transition-colors border-t border-surface">
                     <td className="px-5 py-3.5">
-                      <p className="font-semibold text-[#1E293B]">{item.name}</p>
-                      <p className="text-[11px] text-[#94A3B8] mt-0.5">{item.cat}</p>
+                      <p className="font-semibold text-ink">{item.name}</p>
+                      <p className="text-[11px] text-ink-muted mt-0.5">{item.cat}</p>
                     </td>
                     <td className="px-3 py-3.5">
                       <div className="flex items-center gap-3">
                         <div className="flex-1 max-w-[140px]">
-                          <div className="h-1.5 rounded-full bg-[#F1F5F9] overflow-hidden">
+                          <div className="h-1.5 rounded-full bg-surface overflow-hidden">
                             <div className={`h-full rounded-full ${meta.barBg}`} style={{ width:`${pct}%` }}/>
                           </div>
                         </div>
-                        <span className="text-[13px] font-bold tabular-nums text-[#1E293B] min-w-[60px]">
+                        <span className="text-[13px] font-bold tabular-nums text-ink min-w-[60px]">
                           {item.current} {item.unit}
                         </span>
                       </div>
                     </td>
-                    <td className="px-3 py-3.5 text-right text-[#64748B] tabular-nums">{item.min}</td>
-                    <td className="px-3 py-3.5 text-right text-[#64748B] tabular-nums">{item.burnRate}/d</td>
+                    <td className="px-3 py-3.5 text-right text-ink-soft tabular-nums">{item.min}</td>
+                    <td className="px-3 py-3.5 text-right text-ink-soft tabular-nums">{item.burnRate}/d</td>
                     <td className="px-3 py-3.5 text-right">
                       <span className={`tabular-nums font-semibold ${
-                        item.status==='critical' ? 'text-[#B91C1C]' :
-                        item.status==='low'      ? 'text-[#B45309]' :
-                        'text-[#1E293B]'
+                        item.status==='critical' ? 'text-danger-text' :
+                        item.status==='low'      ? 'text-warning-text' :
+                        'text-ink'
                       }`}>{etaStr}</span>
                     </td>
-                    <td className="px-3 py-3.5 text-[#64748B] tabular-nums">{item.lastRestocked}</td>
+                    <td className="px-3 py-3.5 text-ink-soft tabular-nums">{item.lastRestocked}</td>
                     <td className="px-3 py-3.5"><Badge tone={meta.tone} dot>{meta.label}</Badge></td>
                     <td className="px-5 py-3.5 text-right">
                       <div className="inline-flex items-center gap-1">
                         <button className={`h-8 px-3 rounded-md text-[11.5px] font-bold transition-colors ${
                           item.status==='critical' || item.status==='low'
-                            ? 'bg-[#4A7FA7] text-white hover:bg-[#3A6588]'
-                            : 'text-[#64748B] hover:bg-[#F1F5F9]'
+                            ? 'bg-primary text-white hover:bg-primary-deep'
+                            : 'text-ink-soft hover:bg-surface'
                         }`}>
                           Restock
                         </button>
-                        <button className="w-7 h-7 rounded-md hover:bg-[#F1F5F9] flex items-center justify-center text-[#94A3B8]">
+                        <button className="w-7 h-7 rounded-md hover:bg-surface flex items-center justify-center text-ink-muted">
                           <MoreHorizontal size={14}/>
                         </button>
                       </div>

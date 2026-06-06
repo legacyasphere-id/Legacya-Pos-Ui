@@ -10,9 +10,9 @@ export const Switch = ({ checked, onChange, size = 'md' }) => {
   return (
     <button
       onClick={() => onChange(!checked)}
-      className={`${s.w} ${s.h} relative rounded-full transition-colors duration-200 ${checked ? 'bg-[#22C55E]' : 'bg-[#CBD5E1]'}`}
+      className={`${s.w} ${s.h} relative rounded-full transition-colors duration-200 ${checked ? 'bg-success' : 'bg-track'}`}
     >
-      <span className={`absolute top-0.5 left-0.5 ${s.dot} rounded-full bg-white shadow transition-transform duration-200 ${checked ? s.shift : ''}`} />
+      <span className={`absolute top-0.5 left-0.5 ${s.dot} rounded-full bg-card shadow transition-transform duration-200 ${checked ? s.shift : ''}`} />
     </button>
   );
 };

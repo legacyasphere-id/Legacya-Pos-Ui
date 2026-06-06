@@ -80,16 +80,16 @@ const POSCashier = () => {
     <div className="grid grid-cols-1 xl:grid-cols-[1fr_400px] gap-4 h-full">
       {/* LEFT — Menu */}
       <Card className="flex flex-col overflow-hidden">
-        <div className="p-4 border-b border-[#EEF2F7] flex items-center gap-3">
-          <button className="flex items-center gap-2 h-11 px-3.5 rounded-xl bg-[#DCEAF5] text-[#3A6588] hover:bg-[#C9DEF0] transition-colors">
+        <div className="p-4 border-b border-line-soft flex items-center gap-3">
+          <button className="flex items-center gap-2 h-11 px-3.5 rounded-xl bg-primary-soft text-primary-text hover:bg-primary-soft-deep transition-colors">
             <Hash size={15} strokeWidth={2.4} />
             <span className="text-[14px] font-bold">Table {selectedTable}</span>
             <ChevronDown size={14} strokeWidth={2.4} />
           </button>
           <div className="relative flex-1 max-w-md">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
             <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search menu…"
-              className="w-full h-11 pl-9 pr-3 rounded-xl bg-[#F6F9FC] text-[14px] border border-transparent focus:outline-none focus:border-[#4A7FA7] focus:bg-white transition-all" />
+              className="w-full h-11 pl-9 pr-3 rounded-xl bg-app text-[14px] border border-transparent focus:outline-none focus:border-primary focus:bg-card transition-all" />
           </div>
           <Badge tone="success" dot size="lg">Online · Synced</Badge>
         </div>
@@ -98,12 +98,12 @@ const POSCashier = () => {
           {categories.map((cat) => (
             <button key={cat.id} onClick={() => setActiveCat(cat.id)}
               className={`shrink-0 inline-flex items-center gap-2 h-11 px-4 rounded-xl text-[13.5px] font-semibold transition-all ${
-                activeCat === cat.id ? 'bg-[#1E293B] text-white shadow-sm' : 'bg-[#F6F9FC] text-[#64748B] hover:bg-[#EEF2F7] hover:text-[#1E293B]'
+                activeCat === cat.id ? 'bg-tooltip text-white shadow-sm' : 'bg-app text-ink-soft hover:bg-line-soft hover:text-ink'
               }`}>
               <span className="text-base">{cat.emoji}</span>
               {cat.label}
               <span className={`text-[10.5px] px-1.5 py-0.5 rounded-md font-bold tabular-nums ${
-                activeCat === cat.id ? 'bg-white/15 text-white' : 'bg-white text-[#94A3B8]'
+                activeCat === cat.id ? 'bg-white/15 text-white' : 'bg-card text-ink-muted'
               }`}>{cat.count}</span>
             </button>
           ))}
@@ -115,22 +115,22 @@ const POSCashier = () => {
               const inCart = cart.find((c) => c.id === item.id);
               return (
                 <button key={item.id} onClick={() => addToCart(item)}
-                  className="relative group bg-white border border-[#E2E8F0] rounded-2xl p-3 text-left hover:border-[#4A7FA7] hover:shadow-md transition-all duration-150 active:scale-[0.98]">
-                  <div className="aspect-square rounded-xl bg-gradient-to-br from-[#F6F9FC] to-[#DCEAF5] flex items-center justify-center text-5xl mb-3">
+                  className="relative group bg-card border border-line rounded-2xl p-3 text-left hover:border-primary hover:shadow-md transition-all duration-150 active:scale-[0.98]">
+                  <div className="aspect-square rounded-xl bg-gradient-to-br from-app to-primary-soft flex items-center justify-center text-5xl mb-3">
                     {item.emoji}
                   </div>
                   {item.stock === 'low' && (
                     <div className="absolute top-2 right-2"><Badge tone="warning" size="sm" dot>Low</Badge></div>
                   )}
                   {inCart && (
-                    <div className="absolute top-2 left-2 w-6 h-6 rounded-full bg-[#4A7FA7] text-white text-[11px] font-bold flex items-center justify-center tabular-nums">
+                    <div className="absolute top-2 left-2 w-6 h-6 rounded-full bg-primary text-white text-[11px] font-bold flex items-center justify-center tabular-nums">
                       {inCart.qty}
                     </div>
                   )}
-                  <p className="text-[13px] font-semibold text-[#1E293B] line-clamp-2 leading-snug min-h-[34px]">{item.name}</p>
+                  <p className="text-[13px] font-semibold text-ink line-clamp-2 leading-snug min-h-[34px]">{item.name}</p>
                   <div className="mt-1 flex items-center justify-between">
-                    <p className="text-[13px] font-bold text-[#3A6588] tabular-nums">{fmtIDRShort(item.price)}</p>
-                    <div className="w-7 h-7 rounded-lg bg-[#F6F9FC] group-hover:bg-[#4A7FA7] group-hover:text-white text-[#64748B] flex items-center justify-center transition-colors">
+                    <p className="text-[13px] font-bold text-primary-text tabular-nums">{fmtIDRShort(item.price)}</p>
+                    <div className="w-7 h-7 rounded-lg bg-app group-hover:bg-primary group-hover:text-white text-ink-soft flex items-center justify-center transition-colors">
                       <Plus size={14} strokeWidth={2.6} />
                     </div>
                   </div>
@@ -143,17 +143,17 @@ const POSCashier = () => {
 
       {/* RIGHT — Order panel */}
       <Card className="flex flex-col overflow-hidden">
-        <div className="p-4 border-b border-[#EEF2F7]">
+        <div className="p-4 border-b border-line-soft">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-semibold text-[#94A3B8] uppercase tracking-wider">Current Order</p>
-              <p className="text-[16px] font-bold text-[#1E293B] tabular-nums" style={{ fontFamily: 'Plus Jakarta Sans' }}>ORD-1052</p>
+              <p className="text-[11px] font-semibold text-ink-muted uppercase tracking-wider">Current Order</p>
+              <p className="text-[16px] font-bold text-ink tabular-nums" style={{ fontFamily: 'Plus Jakarta Sans' }}>ORD-1052</p>
             </div>
             <Badge tone="primary" dot size="lg">Table {selectedTable}</Badge>
           </div>
-          <div className="mt-2.5 flex items-center gap-2 text-[12px] text-[#64748B]">
+          <div className="mt-2.5 flex items-center gap-2 text-[12px] text-ink-soft">
             <User size={12} /> <span>Walk-in customer</span>
-            <Dot size={12} className="text-[#CBD5E1]" />
+            <Dot size={12} className="text-ink-faint" />
             <Clock size={12} /> <span className="tabular-nums">11:48 WIB</span>
           </div>
         </div>
@@ -161,33 +161,33 @@ const POSCashier = () => {
         <div className="flex-1 overflow-y-auto p-3">
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center px-6">
-              <div className="w-16 h-16 rounded-2xl bg-[#F6F9FC] flex items-center justify-center mb-3">
+              <div className="w-16 h-16 rounded-2xl bg-app flex items-center justify-center mb-3">
                 <span className="text-3xl">🛒</span>
               </div>
-              <p className="text-[14px] font-semibold text-[#1E293B]">Empty order</p>
-              <p className="text-[12.5px] text-[#94A3B8] mt-1">Tap any menu item to start</p>
+              <p className="text-[14px] font-semibold text-ink">Empty order</p>
+              <p className="text-[12.5px] text-ink-muted mt-1">Tap any menu item to start</p>
             </div>
           ) : (
             <div className="space-y-2">
               {cart.map((item) => (
-                <div key={item.id} className="group flex items-start gap-3 p-2.5 rounded-xl hover:bg-[#F8FAFC] transition-colors">
-                  <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-[#F6F9FC] to-[#DCEAF5] flex items-center justify-center text-2xl shrink-0">{item.emoji}</div>
+                <div key={item.id} className="group flex items-start gap-3 p-2.5 rounded-xl hover:bg-surface-2 transition-colors">
+                  <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-app to-primary-soft flex items-center justify-center text-2xl shrink-0">{item.emoji}</div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-semibold text-[#1E293B] leading-tight">{item.name}</p>
-                    <p className="text-[11.5px] text-[#94A3B8] tabular-nums mt-0.5">{fmtIDR(item.price)}</p>
-                    <div className="mt-1.5 inline-flex items-center gap-2 bg-[#F1F5F9] rounded-lg p-0.5">
-                      <button onClick={() => updateQty(item.id, -1)} className="w-6 h-6 rounded-md bg-white hover:bg-[#E2E8F0] flex items-center justify-center text-[#64748B]">
+                    <p className="text-[13px] font-semibold text-ink leading-tight">{item.name}</p>
+                    <p className="text-[11.5px] text-ink-muted tabular-nums mt-0.5">{fmtIDR(item.price)}</p>
+                    <div className="mt-1.5 inline-flex items-center gap-2 bg-surface rounded-lg p-0.5">
+                      <button onClick={() => updateQty(item.id, -1)} className="w-6 h-6 rounded-md bg-card hover:bg-line flex items-center justify-center text-ink-soft">
                         <Minus size={12} strokeWidth={2.6} />
                       </button>
                       <span className="text-[12.5px] font-bold tabular-nums min-w-[16px] text-center">{item.qty}</span>
-                      <button onClick={() => updateQty(item.id, 1)} className="w-6 h-6 rounded-md bg-white hover:bg-[#E2E8F0] flex items-center justify-center text-[#64748B]">
+                      <button onClick={() => updateQty(item.id, 1)} className="w-6 h-6 rounded-md bg-card hover:bg-line flex items-center justify-center text-ink-soft">
                         <Plus size={12} strokeWidth={2.6} />
                       </button>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-[13px] font-bold text-[#1E293B] tabular-nums">{fmtIDRShort(item.price * item.qty)}</p>
-                    <button onClick={() => removeItem(item.id)} className="mt-1 text-[#CBD5E1] hover:text-[#EF4444] transition-colors opacity-0 group-hover:opacity-100">
+                    <p className="text-[13px] font-bold text-ink tabular-nums">{fmtIDRShort(item.price * item.qty)}</p>
+                    <button onClick={() => removeItem(item.id)} className="mt-1 text-ink-faint hover:text-danger transition-colors opacity-0 group-hover:opacity-100">
                       <Trash2 size={13} />
                     </button>
                   </div>
@@ -197,15 +197,15 @@ const POSCashier = () => {
           )}
         </div>
 
-        <div className="border-t border-[#EEF2F7] p-4 space-y-3">
+        <div className="border-t border-line-soft p-4 space-y-3">
           <div className="flex items-center gap-2">
-            <Tag size={13} className="text-[#94A3B8]" />
-            <span className="text-[12.5px] text-[#64748B] flex-1">Discount</span>
+            <Tag size={13} className="text-ink-muted" />
+            <span className="text-[12.5px] text-ink-soft flex-1">Discount</span>
             <div className="flex items-center gap-1">
               {[0, 10, 15].map((d) => (
                 <button key={d} onClick={() => setDiscount(d)}
                   className={`h-7 px-2.5 rounded-md text-[11.5px] font-bold tabular-nums transition-colors ${
-                    discount === d ? 'bg-[#1E293B] text-white' : 'bg-[#F1F5F9] text-[#64748B] hover:bg-[#E2E8F0]'
+                    discount === d ? 'bg-tooltip text-white' : 'bg-surface text-ink-soft hover:bg-line'
                   }`}>
                   {d === 0 ? 'None' : `${d}%`}
                 </button>
@@ -213,31 +213,31 @@ const POSCashier = () => {
             </div>
           </div>
 
-          <div className="space-y-1 pt-2 border-t border-dashed border-[#E2E8F0]">
+          <div className="space-y-1 pt-2 border-t border-dashed border-line">
             <div className="flex justify-between text-[12.5px]">
-              <span className="text-[#64748B]">Subtotal</span>
-              <span className="tabular-nums font-medium text-[#1E293B]">{fmtIDR(subtotal)}</span>
+              <span className="text-ink-soft">Subtotal</span>
+              <span className="tabular-nums font-medium text-ink">{fmtIDR(subtotal)}</span>
             </div>
             {discount > 0 && (
               <div className="flex justify-between text-[12.5px]">
-                <span className="text-[#15803D]">Discount ({discount}%)</span>
-                <span className="tabular-nums font-medium text-[#15803D]">-{fmtIDR(discountAmt)}</span>
+                <span className="text-success-text">Discount ({discount}%)</span>
+                <span className="tabular-nums font-medium text-success-text">-{fmtIDR(discountAmt)}</span>
               </div>
             )}
             <div className="flex justify-between text-[12.5px]">
-              <span className="text-[#64748B]">Tax 10%</span>
-              <span className="tabular-nums font-medium text-[#1E293B]">{fmtIDR(tax)}</span>
+              <span className="text-ink-soft">Tax 10%</span>
+              <span className="tabular-nums font-medium text-ink">{fmtIDR(tax)}</span>
             </div>
-            <div className="flex items-center justify-between pt-2 mt-1 border-t border-[#E2E8F0]">
-              <span className="text-[13px] font-semibold text-[#1E293B]">Total</span>
-              <span className="text-[22px] font-bold tabular-nums text-[#1E293B]" style={{ fontFamily: 'Plus Jakarta Sans' }}>
+            <div className="flex items-center justify-between pt-2 mt-1 border-t border-line">
+              <span className="text-[13px] font-semibold text-ink">Total</span>
+              <span className="text-[22px] font-bold tabular-nums text-ink" style={{ fontFamily: 'Plus Jakarta Sans' }}>
                 {fmtIDR(Math.round(total))}
               </span>
             </div>
           </div>
 
           <div>
-            <p className="text-[10.5px] font-semibold text-[#94A3B8] uppercase tracking-wider mb-1.5">Payment method</p>
+            <p className="text-[10.5px] font-semibold text-ink-muted uppercase tracking-wider mb-1.5">Payment method</p>
             <div className="grid grid-cols-4 gap-1.5">
               {paymentMethods.map((p) => {
                 const Icon = p.icon;
@@ -245,7 +245,7 @@ const POSCashier = () => {
                 return (
                   <button key={p.id} onClick={() => setPayment(p.id)}
                     className={`flex flex-col items-center gap-1 py-2.5 rounded-xl text-[11px] font-bold transition-all ${
-                      active ? 'bg-[#DCEAF5] text-[#3A6588] ring-2 ring-[#4A7FA7]' : 'bg-[#F6F9FC] text-[#64748B] hover:bg-[#EEF2F7]'
+                      active ? 'bg-primary-soft text-primary-text ring-2 ring-primary' : 'bg-app text-ink-soft hover:bg-line-soft'
                     }`}>
                     <Icon size={16} strokeWidth={2.2} />
                     {p.label}

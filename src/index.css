@@ -2,10 +2,184 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ───────────────────────────────────────────────────────────
+   Design tokens — semantic color system
+   Light is the default (and the first-run fallback). The `.dark`
+   class on <html> swaps the palette. Saved preference / system
+   resolution is handled by src/store/theme.store.js.
+   ─────────────────────────────────────────────────────────── */
+:root {
+  /* Surfaces & structure */
+  --c-app:               #F6F9FC;
+  --c-sidebar:           #FFFFFF;
+  --c-card:              #FFFFFF;
+  --c-surface:           #F1F5F9;
+  --c-surface-2:         #F8FAFC;
+  --c-surface-3:         #FAFAF7;
+  --c-tooltip:           #1E293B;
+  --c-track:             #CBD5E1;
+  --c-scrim:             rgba(255, 255, 255, 0.45);
+
+  /* Lines */
+  --c-line:              #E2E8F0;
+  --c-line-soft:         #EEF2F7;
+
+  /* Ink / text */
+  --c-ink:               #1E293B;
+  --c-ink-soft:          #64748B;
+  --c-ink-muted:         #94A3B8;
+  --c-ink-strong:        #475569;
+  --c-ink-faint:         #CBD5E1;
+
+  /* Primary (brand) */
+  --c-primary:           #4A7FA7;
+  --c-primary-deep:      #3A6588;
+  --c-primary-text:      #3A6588;
+  --c-primary-soft:      #DCEAF5;
+  --c-primary-soft-deep: #C9DEF0;
+  --c-primary-light:     #7AA9CC;
+
+  /* Success */
+  --c-success:           #22C55E;
+  --c-success-deep:      #16A34A;
+  --c-success-text:      #15803D;
+  --c-success-soft:      #DCFCE7;
+  --c-success-border:    #BBF7D0;
+  --c-success-faint:     #F0FDF4;
+
+  /* Warning */
+  --c-warning:           #F59E0B;
+  --c-warning-text:      #B45309;
+  --c-warning-soft:      #FEF3C7;
+  --c-warning-faint:     #FFFBEB;
+  --c-warning-border:    #FDE68A;
+  --c-warning-accent:    #FCD34D;
+
+  /* Danger */
+  --c-danger:            #EF4444;
+  --c-danger-deep:       #DC2626;
+  --c-danger-text:       #B91C1C;
+  --c-danger-soft:       #FEE2E2;
+  --c-danger-faint:      #FEF2F2;
+  --c-danger-border:     #FECACA;
+  --c-danger-accent:     #FCA5A5;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+  --shadow-md: 0 4px 12px -2px rgb(15 23 42 / 0.06), 0 2px 4px -2px rgb(15 23 42 / 0.04);
+  --shadow-lg: 0 12px 32px -8px rgb(15 23 42 / 0.10), 0 4px 8px -4px rgb(15 23 42 / 0.05);
+
+  /* Chart helpers (consumed via useThemeColors) */
+  --c-chart-grid:        #F1F5F9;
+  --c-chart-axis:        #94A3B8;
+  --c-chart-compare:     #CBD5E1;
+
+  /* Categorical blue ramp for donut / payment-mix series */
+  --c-chart-b0:          #4A7FA7;
+  --c-chart-b1:          #7AA9CC;
+  --c-chart-b2:          #A8C7DD;
+  --c-chart-b3:          #DCEAF5;
+}
+
+.dark {
+  /* Surfaces & structure */
+  --c-app:               #0F1115;
+  --c-sidebar:           #13161B;
+  --c-card:              #181C23;
+  --c-surface:           #1F242E;
+  --c-surface-2:         #161A21;
+  --c-surface-3:         #1B202A;
+  --c-tooltip:           #2A2F3A;
+  --c-track:             #2E3542;
+  --c-scrim:             rgba(15, 17, 21, 0.55);
+
+  /* Lines */
+  --c-line:              #252A34;
+  --c-line-soft:         #1E2330;
+
+  /* Ink / text */
+  --c-ink:               #F3F4F6;
+  --c-ink-soft:          #9CA3AF;
+  --c-ink-muted:         #8A92A0;
+  --c-ink-strong:        #CBD5E1;
+  --c-ink-faint:         #646C7A;
+
+  /* Primary (brand) */
+  --c-primary:           #4F8CFF;
+  --c-primary-deep:      #3D78E6;
+  --c-primary-text:      #9CC0FF;
+  --c-primary-soft:      #1B2740;
+  --c-primary-soft-deep: #22304A;
+  --c-primary-light:     #6BA0FF;
+
+  /* Success */
+  --c-success:           #22C55E;
+  --c-success-deep:      #16A34A;
+  --c-success-text:      #4ADE80;
+  --c-success-soft:      #102A1C;
+  --c-success-border:    #1E4D32;
+  --c-success-faint:     #0D2016;
+
+  /* Warning */
+  --c-warning:           #F59E0B;
+  --c-warning-text:      #FBBF24;
+  --c-warning-soft:      #2A2410;
+  --c-warning-faint:     #1E1A0C;
+  --c-warning-border:    #4A3D14;
+  --c-warning-accent:    #FBBF24;
+
+  /* Danger */
+  --c-danger:            #EF4444;
+  --c-danger-deep:       #DC2626;
+  --c-danger-text:       #FCA5A5;
+  --c-danger-soft:       #2C1517;
+  --c-danger-faint:      #1F1011;
+  --c-danger-border:     #4D2024;
+  --c-danger-accent:     #F87171;
+
+  /* Elevation — deeper on dark surfaces */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.30);
+  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.40), 0 2px 4px -2px rgb(0 0 0 / 0.30);
+  --shadow-lg: 0 12px 32px -8px rgb(0 0 0 / 0.55), 0 4px 8px -4px rgb(0 0 0 / 0.40);
+
+  /* Chart helpers */
+  --c-chart-grid:        #252A34;
+  --c-chart-axis:        #6B7280;
+  --c-chart-compare:     #3A414E;
+
+  /* Categorical blue ramp — brightened for dark surfaces */
+  --c-chart-b0:          #4F8CFF;
+  --c-chart-b1:          #6BA0FF;
+  --c-chart-b2:          #93BBFF;
+  --c-chart-b3:          #3A4A6B;
+}
+
 * {
   font-family: 'Inter', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Smooth the light/dark transition without animating layout */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 200ms ease, border-color 200ms ease,
+              color 200ms ease, fill 200ms ease, stroke 200ms ease,
+              box-shadow 200ms ease;
+}
+
+/* Accessible focus ring (color-blind friendly, theme-aware) */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+body {
+  background: var(--c-app);
+  color: var(--c-ink);
 }
