@@ -18,10 +18,10 @@ const seedOrders = [
 ];
 
 const urgencyStyles = {
-  fresh:   { ring:'ring-2 ring-[#DCEAF5]',              accent:'bg-[#4A7FA7]', tone:'primary', label:'New order' },
-  normal:  { ring:'ring-1 ring-[#E2E8F0]',              accent:'bg-[#22C55E]', tone:'success', label:'Cooking' },
-  warning: { ring:'ring-2 ring-[#FCD34D]',              accent:'bg-[#F59E0B]', tone:'warning', label:'5+ min' },
-  urgent:  { ring:'ring-2 ring-[#FCA5A5] animate-pulse', accent:'bg-[#EF4444]', tone:'danger',  label:'URGENT' },
+  fresh:   { ring:'ring-2 ring-primary-soft',              accent:'bg-primary', tone:'primary', label:'New order' },
+  normal:  { ring:'ring-1 ring-line',              accent:'bg-success', tone:'success', label:'Cooking' },
+  warning: { ring:'ring-2 ring-warning-accent',              accent:'bg-warning', tone:'warning', label:'5+ min' },
+  urgent:  { ring:'ring-2 ring-danger-accent animate-pulse', accent:'bg-danger', tone:'danger',  label:'URGENT' },
 };
 
 const KitchenStat = ({ label, value, accent }) => (
@@ -66,7 +66,7 @@ const KitchenDisplay = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between flex-wrap gap-3 bg-[#1E293B] rounded-2xl p-5 text-white">
+      <div className="flex items-center justify-between flex-wrap gap-3 bg-tooltip rounded-2xl p-5 text-white">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
             <ChefHat size={22} className="text-white"/>
@@ -98,28 +98,28 @@ const KitchenDisplay = () => {
           const urgency = urgencyOf(o);
           const style = urgencyStyles[urgency];
           return (
-            <div key={o.id} className={`bg-white rounded-2xl overflow-hidden ${style.ring}`} style={{ boxShadow: tokens.shadow.md }}>
+            <div key={o.id} className={`bg-card rounded-2xl overflow-hidden ${style.ring}`} style={{ boxShadow: tokens.shadow.md }}>
               <div className={`h-1 ${style.accent}`}/>
               <div className="px-5 pt-4 pb-3 flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="text-[20px] font-bold text-[#1E293B] tabular-nums" style={{ fontFamily:'Plus Jakarta Sans' }}>
+                    <p className="text-[20px] font-bold text-ink tabular-nums" style={{ fontFamily:'Plus Jakarta Sans' }}>
                       Table {o.table}
                     </p>
-                    {urgency==='urgent' && <Flame size={18} className="text-[#EF4444]"/>}
+                    {urgency==='urgent' && <Flame size={18} className="text-danger"/>}
                   </div>
-                  <p className="text-[12.5px] text-[#94A3B8] font-semibold tabular-nums mt-0.5">{o.id} · {o.time}</p>
+                  <p className="text-[12.5px] text-ink-muted font-semibold tabular-nums mt-0.5">{o.id} · {o.time}</p>
                 </div>
                 <Badge tone={style.tone} dot size="lg">{style.label}</Badge>
               </div>
 
-              <div className="px-5 py-3 space-y-1.5 border-y border-[#F1F5F9] bg-[#FAFBFC]">
+              <div className="px-5 py-3 space-y-1.5 border-y border-surface bg-surface-2">
                 {o.items.map((it, i) => (
                   <div key={i} className="flex items-start gap-2.5">
-                    <span className="inline-flex items-center justify-center min-w-[28px] h-7 px-1.5 rounded-md bg-[#1E293B] text-white text-[13px] font-bold tabular-nums">
+                    <span className="inline-flex items-center justify-center min-w-[28px] h-7 px-1.5 rounded-md bg-tooltip text-white text-[13px] font-bold tabular-nums">
                       ×{it.qty}
                     </span>
-                    <p className="text-[15px] font-semibold text-[#1E293B] leading-tight pt-0.5">{it.name}</p>
+                    <p className="text-[15px] font-semibold text-ink leading-tight pt-0.5">{it.name}</p>
                   </div>
                 ))}
               </div>
@@ -127,16 +127,16 @@ const KitchenDisplay = () => {
               <div className="px-5 py-4 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                    urgency==='urgent'  ? 'bg-[#FEE2E2] text-[#B91C1C]' :
-                    urgency==='warning' ? 'bg-[#FEF3C7] text-[#B45309]' :
-                    urgency==='fresh'   ? 'bg-[#DCEAF5] text-[#3A6588]' :
-                    'bg-[#DCFCE7] text-[#15803D]'
+                    urgency==='urgent'  ? 'bg-danger-soft text-danger-text' :
+                    urgency==='warning' ? 'bg-warning-soft text-warning-text' :
+                    urgency==='fresh'   ? 'bg-primary-soft text-primary-text' :
+                    'bg-success-soft text-success-text'
                   }`}>
                     <Timer size={16} strokeWidth={2.4}/>
                   </div>
                   <div>
-                    <p className="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wider">Elapsed</p>
-                    <p className="text-[17px] font-bold tabular-nums text-[#1E293B] leading-none mt-0.5" style={{ fontFamily:'Plus Jakarta Sans' }}>
+                    <p className="text-[10px] font-semibold text-ink-muted uppercase tracking-wider">Elapsed</p>
+                    <p className="text-[17px] font-bold tabular-nums text-ink leading-none mt-0.5" style={{ fontFamily:'Plus Jakarta Sans' }}>
                       {o.status==='pending' ? '—' : fmtElapsed(o.elapsed)}
                     </p>
                   </div>
@@ -158,11 +158,11 @@ const KitchenDisplay = () => {
 
       {ordersLive.length === 0 && (
         <Card className="p-12 text-center">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-[#DCFCE7] flex items-center justify-center mb-4">
-            <CheckCircle2 size={28} className="text-[#15803D]"/>
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-success-soft flex items-center justify-center mb-4">
+            <CheckCircle2 size={28} className="text-success-text"/>
           </div>
-          <p className="text-[18px] font-bold text-[#1E293B]" style={{ fontFamily:'Plus Jakarta Sans' }}>All caught up.</p>
-          <p className="text-[13px] text-[#64748B] mt-1">Queue is empty — new orders will appear here automatically.</p>
+          <p className="text-[18px] font-bold text-ink" style={{ fontFamily:'Plus Jakarta Sans' }}>All caught up.</p>
+          <p className="text-[13px] text-ink-soft mt-1">Queue is empty — new orders will appear here automatically.</p>
         </Card>
       )}
     </div>

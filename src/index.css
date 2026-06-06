@@ -18,6 +18,7 @@
   --c-surface-3:         #FAFAF7;
   --c-tooltip:           #1E293B;
   --c-track:             #CBD5E1;
+  --c-scrim:             rgba(255, 255, 255, 0.45);
 
   /* Lines */
   --c-line:              #E2E8F0;
@@ -72,6 +73,12 @@
   --c-chart-grid:        #F1F5F9;
   --c-chart-axis:        #94A3B8;
   --c-chart-compare:     #CBD5E1;
+
+  /* Categorical blue ramp for donut / payment-mix series */
+  --c-chart-b0:          #4A7FA7;
+  --c-chart-b1:          #7AA9CC;
+  --c-chart-b2:          #A8C7DD;
+  --c-chart-b3:          #DCEAF5;
 }
 
 .dark {
@@ -84,6 +91,7 @@
   --c-surface-3:         #1B202A;
   --c-tooltip:           #2A2F3A;
   --c-track:             #2E3542;
+  --c-scrim:             rgba(15, 17, 21, 0.55);
 
   /* Lines */
   --c-line:              #252A34;
@@ -138,6 +146,12 @@
   --c-chart-grid:        #252A34;
   --c-chart-axis:        #6B7280;
   --c-chart-compare:     #3A414E;
+
+  /* Categorical blue ramp — brightened for dark surfaces */
+  --c-chart-b0:          #4F8CFF;
+  --c-chart-b1:          #6BA0FF;
+  --c-chart-b2:          #93BBFF;
+  --c-chart-b3:          #3A4A6B;
 }
 
 * {

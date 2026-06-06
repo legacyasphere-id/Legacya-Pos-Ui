@@ -6,7 +6,7 @@ export const Logo = ({ collapsed }) => (
       className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary-deep flex items-center justify-center shrink-0"
       style={{ boxShadow: '0 4px 12px -2px rgb(74 127 167 / 0.35)' }}
     >
-      <div className="absolute inset-0.5 rounded-[10px] border border-card/15" />
+      <div className="absolute inset-0.5 rounded-[10px] border border-white/15" />
       <span className="text-white font-bold text-[15px]" style={{ fontFamily: 'Plus Jakarta Sans' }}>L</span>
       <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-success border-2 border-card" />
     </div>

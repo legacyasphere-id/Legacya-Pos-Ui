@@ -27,6 +27,14 @@ const resolveColors = () => ({
   ink:          readVar('--c-ink', '#1E293B'),
   inkSoft:      readVar('--c-ink-soft', '#64748B'),
   line:         readVar('--c-line', '#E2E8F0'),
+  surface:      readVar('--c-surface', '#F1F5F9'),
+  // Categorical blue ramp for donut / payment-mix series.
+  blues: [
+    readVar('--c-chart-b0', '#4A7FA7'),
+    readVar('--c-chart-b1', '#7AA9CC'),
+    readVar('--c-chart-b2', '#A8C7DD'),
+    readVar('--c-chart-b3', '#DCEAF5'),
+  ],
 });
 
 export function useThemeColors() {
