@@ -8,12 +8,12 @@ const sizes = {
 };
 
 const variants = {
-  primary:   'bg-[#4A7FA7] text-white hover:bg-[#3A6588] shadow-sm',
-  secondary: 'bg-white text-[#1E293B] border border-[#E2E8F0] hover:bg-[#F6F9FC]',
-  ghost:     'bg-transparent text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#1E293B]',
-  soft:      'bg-[#DCEAF5] text-[#3A6588] hover:bg-[#C9DEF0]',
-  danger:    'bg-[#EF4444] text-white hover:bg-[#DC2626]',
-  success:   'bg-[#22C55E] text-white hover:bg-[#16A34A] shadow-sm',
+  primary:   'bg-primary text-white hover:bg-primary-deep shadow-sm',
+  secondary: 'bg-card text-ink border border-line hover:bg-app',
+  ghost:     'bg-transparent text-ink-soft hover:bg-surface hover:text-ink',
+  soft:      'bg-primary-soft text-primary-text hover:bg-primary-soft-deep',
+  danger:    'bg-danger text-white hover:bg-danger-deep',
+  success:   'bg-success text-white hover:bg-success-deep shadow-sm',
 };
 
 export const Button = ({ variant = 'primary', size = 'md', icon: Icon, iconRight: IconRight, children, className = '', ...rest }) => {
