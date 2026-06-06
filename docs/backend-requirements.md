@@ -253,6 +253,38 @@ create policy order_kitchen_advance on "order" for update
 > not edit money fields. Sensitive writes (payments) go through `security definer` functions with the
 > service role, never direct table writes from the client.
 
+### 4.1 RLS during development (phased rollout)
+
+RLS is **not optional** even pre-production: the frontend talks to Supabase directly, so the
+anon/publishable key ships in the client bundle. With RLS off, that key can read/write every row
+in every table via the auto-generated REST API — any reachable demo/staging deploy is wide open.
+"Not for production" only buys you a pass on a **purely local** `supabase start` with throwaway data.
+
+We therefore enable RLS from day one but roll out policy granularity in two steps:
+
+**Step 1 — baseline (now):** enable RLS on every table + one permissive policy per table —
+*any authenticated user is allowed; anon is denied.* Closes the world-open hole without blocking
+P1 feature work.
+
+```sql
+alter table "order" enable row level security;
+
+create policy dev_authenticated_all on "order"
+  for all
+  to authenticated
+  using (true)
+  with check (true);
+-- repeat per table; anon role gets no policy => no access.
+```
+
+**Step 2 — tighten (before production):** replace the `dev_authenticated_all` policies with the
+per-role matrix in §4 (cashier can't read Settings/Team, kitchen sees only the KDS queue, payments
+via definer functions only, etc.).
+
+Non-negotiable even in Step 1: keep the `service_role` key **server-side only** (Edge Functions),
+and route payments/stock writes through `security definer` RPCs rather than opening those tables to
+the `authenticated` role.
+
 ---
 
 ## 5. Server logic — RPC & Edge Functions
