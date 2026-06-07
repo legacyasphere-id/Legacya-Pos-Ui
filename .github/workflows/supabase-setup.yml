@@ -1,0 +1,57 @@
+name: Supabase P1 setup
+
+# Applies the full P1 backend (schema + RLS + functions + seed) to the linked
+# Supabase project, server-side — no copy-paste needed. Chunk 01 resets the
+# public schema first, so it's safe to re-run regardless of current state.
+#
+# Requires one repo secret: SUPABASE_DB_PASSWORD (Settings → Secrets and
+# variables → Actions). Project ref + region are set below.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/supabase-p1-scaffold]
+    paths: ['.github/workflows/supabase-setup.yml']
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply P1 schema + RLS + functions + seed
+        env:
+          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          PROJECT_REF: dlizxnlwhnbargobvzmi
+          PGCONNECT_TIMEOUT: '15'
+          PGOPTIONS: '-c lock_timeout=20000 -c statement_timeout=120000'
+        run: |
+          if [ -z "$PGPASSWORD" ]; then
+            echo "::error::Add the SUPABASE_DB_PASSWORD repository secret, then re-run this workflow."
+            exit 1
+          fi
+          # Auto-detect the correct session-pooler host for the project.
+          CONN=""
+          for h in \
+            aws-1-ap-south-1.pooler.supabase.com \
+            aws-0-ap-south-1.pooler.supabase.com; do
+            if psql "host=$h port=5432 user=postgres.${PROJECT_REF} dbname=postgres sslmode=require" -c "select 1" >/dev/null 2>&1; then
+              CONN="host=$h port=5432 user=postgres.${PROJECT_REF} dbname=postgres sslmode=require"
+              echo "Connected via $h"
+              break
+            fi
+          done
+          if [ -z "$CONN" ]; then
+            echo "::error::Could not connect through the pooler. Check the SUPABASE_DB_PASSWORD secret value (it must be your current database password)."
+            exit 1
+          fi
+          for f in 01_init_a 02_init_b 03_init_c 04_rls 05_functions_a 06_functions_b 07_seed; do
+            echo "::group::Applying $f"
+            psql "$CONN" -v ON_ERROR_STOP=1 -f "supabase/setup_chunks/${f}.sql"
+            echo "::endgroup::"
+          done
+          echo "Verifying..."
+          psql "$CONN" -tAc "select 'menu_item rows = '||count(*) from menu_item;"
+          psql "$CONN" -tAc "select 'tables with RLS = '||count(*) from pg_tables where schemaname='public' and rowsecurity;"
+
+# trigger: run after SUPABASE_DB_PASSWORD secret added

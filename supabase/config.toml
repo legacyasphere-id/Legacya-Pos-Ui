@@ -1,0 +1,36 @@
+# Supabase local config. `supabase start` reads this; `supabase db reset`
+# applies migrations + seed. See https://supabase.com/docs/guides/cli/config
+project_id = "legacya-pos"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 16
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = false   # dev convenience; enable before production
+
+# The Midtrans webhook is called by Midtrans (no Supabase JWT) — keep it public.
+[functions.payments-midtrans-webhook]
+verify_jwt = false
+
+[functions.payments-midtrans-charge]
+verify_jwt = true
