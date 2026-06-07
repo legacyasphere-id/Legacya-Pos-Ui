@@ -23,6 +23,8 @@ jobs:
         env:
           PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           PROJECT_REF: dlizxnlwhnbargobvzmi
+          PGCONNECT_TIMEOUT: '15'
+          PGOPTIONS: '-c lock_timeout=20000 -c statement_timeout=120000'
         run: |
           if [ -z "$PGPASSWORD" ]; then
             echo "::error::Add the SUPABASE_DB_PASSWORD repository secret, then re-run this workflow."

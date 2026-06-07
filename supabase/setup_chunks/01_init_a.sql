@@ -1,8 +1,29 @@
 -- ===== CHUNK 1 of 7 — run first. Clears any partial paste (safe on a fresh project). =====
-drop schema if exists public cascade;
-create schema public;
-grant usage on schema public to postgres, anon, authenticated, service_role;
-grant all on schema public to postgres, service_role;
+-- Targeted drops (NOT "drop schema public" — that needs a schema-wide exclusive
+-- lock that Supabase's live API connections block, causing a hang).
+drop table if exists public.audit_log            cascade;
+drop table if exists public.stock_movement       cascade;
+drop table if exists public.payment              cascade;
+drop table if exists public.order_item           cascade;
+drop table if exists public."order"              cascade;
+drop table if exists public.recipe_item          cascade;
+drop table if exists public.menu_item            cascade;
+drop table if exists public.category             cascade;
+drop table if exists public.ingredient           cascade;
+drop table if exists public.discount             cascade;
+drop table if exists public.device               cascade;
+drop table if exists public.integration          cascade;
+drop table if exists public.receipt_config       cascade;
+drop table if exists public.payment_method_config cascade;
+drop table if exists public.store_settings       cascade;
+drop table if exists public.profiles             cascade;
+drop function if exists public.handle_new_user()        cascade;
+drop function if exists public.apply_stock_movement()   cascade;
+drop function if exists public.auth_role()              cascade;
+drop sequence if exists public.order_no_seq      cascade;
+drop type if exists order_status   cascade;
+drop type if exists payment_status cascade;
+drop type if exists app_role       cascade;
 
 -- ============================================================================
 -- LegacyaPOS — P1 schema (init)
