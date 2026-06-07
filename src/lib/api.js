@@ -64,3 +64,50 @@ export async function payOrderCash(orderId, amount, idempotencyKey) {
   if (error) throw error;
   return data;
 }
+
+// ── Orders / Kitchen ─────────────────────────────────────────────────────────
+const ORDER_SELECT =
+  'id, order_no, table_label, status, grand_total, placed_at, cooking_at, ' +
+  'order_item(name_snapshot, qty), payment(method, status)';
+
+export async function getOrders({ limit = 100 } = {}) {
+  const { data, error } = await supabase
+    .from('order')
+    .select(ORDER_SELECT)
+    .order('placed_at', { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return data ?? [];
+}
+
+// Active kitchen queue: not yet served/paid.
+export async function getKitchenOrders() {
+  const { data, error } = await supabase
+    .from('order')
+    .select('id, order_no, table_label, status, placed_at, cooking_at, order_item(name_snapshot, qty)')
+    .in('status', ['pending', 'cooking'])
+    .order('placed_at', { ascending: true });
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function advanceOrderStatus(orderId, toStatus) {
+  const { data, error } = await supabase.rpc('advance_order_status', {
+    p_order_id: orderId,
+    p_to: toStatus,
+  });
+  if (error) throw error;
+  return data;
+}
+
+// Realtime subscription on the order table. Returns an unsubscribe function.
+// (Requires the `order` table to be in the supabase_realtime publication; if it
+//  isn't, callers should also poll — see Kitchen.)
+export function subscribeOrders(onChange) {
+  const channel = supabase
+    .channel('orders-stream')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'order' }, onChange)
+    .subscribe();
+  return () => { supabase.removeChannel(channel); };
+}
+
