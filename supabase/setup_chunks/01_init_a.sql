@@ -83,10 +83,10 @@ stable
 security definer
 set search_path = public, auth
 as $$
-  select coalesce(
-    nullif(auth.jwt() ->> 'role', '')::app_role,
-    (select role from public.profiles where id = auth.uid())
-  );
+  -- Read the app role from profiles. Do NOT read auth.jwt()->>'role' — in
+  -- Supabase that claim is the Postgres role (e.g. 'authenticated'), which
+  -- is not a valid app_role value.
+  select role from public.profiles where id = auth.uid();
 $$;
 
 -- ---------------------------------------------------------------------------
