@@ -31,8 +31,8 @@ jobs:
           # Auto-detect the correct session-pooler host for the project.
           CONN=""
           for h in \
-            aws-0-ap-southeast-1.pooler.supabase.com \
-            aws-1-ap-southeast-1.pooler.supabase.com; do
+            aws-1-ap-south-1.pooler.supabase.com \
+            aws-0-ap-south-1.pooler.supabase.com; do
             if psql "host=$h port=5432 user=postgres.${PROJECT_REF} dbname=postgres sslmode=require" -c "select 1" >/dev/null 2>&1; then
               CONN="host=$h port=5432 user=postgres.${PROJECT_REF} dbname=postgres sslmode=require"
               echo "Connected via $h"
