@@ -57,6 +57,7 @@ const mapOrder = (o) => {
     items: (o.order_item ?? []).map((it) => ({ name: it.name_snapshot, qty: it.qty })),
     total: o.grand_total,
     status: o.status,
+    paymentStatus: o.payment_status,
     payment: o.payment?.[0]?.method ?? null,
     time: when ? format(when, 'HH:mm') : '—',
     date: when ? (isToday(when) ? 'Today' : format(when, 'd MMM')) : '—',
@@ -90,7 +91,7 @@ const OrdersList = () => {
     cooking: orders.filter((o) => o.status === 'cooking').length,
     ready: orders.filter((o) => o.status === 'ready').length,
     done: orders.filter((o) => o.status === 'done').length,
-    paid: orders.filter((o) => o.status === 'paid').length,
+    paid: orders.filter((o) => o.paymentStatus === 'paid').length,
   }), [orders]);
 
   const filtered = useMemo(() => {
@@ -100,7 +101,7 @@ const OrdersList = () => {
     return res;
   }, [orders, filter, search]);
 
-  const totalRevenue = orders.filter((o) => o.status === 'paid').reduce((s, o) => s + o.total, 0);
+  const totalRevenue = orders.filter((o) => o.paymentStatus === 'paid').reduce((s, o) => s + o.total, 0);
   const avgOrder = counts.paid ? Math.round(totalRevenue / counts.paid) : 0;
 
   if (loading) {
@@ -128,7 +129,7 @@ const OrdersList = () => {
               { id: 'pending', label: 'Pending', count: counts.pending },
               { id: 'cooking', label: 'Cooking', count: counts.cooking },
               { id: 'ready', label: 'Ready', count: counts.ready },
-              { id: 'paid', label: 'Paid', count: counts.paid },
+              { id: 'done', label: 'Served', count: counts.done },
             ].map((t) => (
               <button key={t.id} onClick={() => setFilter(t.id)}
                 className={`px-3 h-8 rounded-md text-[12px] font-semibold transition-colors inline-flex items-center gap-1.5 ${
@@ -186,7 +187,14 @@ const OrdersList = () => {
                       <td className="px-3 py-3.5"><span className="inline-flex items-center justify-center min-w-7 h-7 px-1.5 rounded-md bg-app text-[12px] font-bold text-ink tabular-nums">{o.table}</span></td>
                       <td className="px-3 py-3.5 text-ink-soft max-w-[280px]"><span className="truncate block">{o.items.map((i) => `${i.name} ×${i.qty}`).join(', ') || '—'}</span></td>
                       <td className="px-3 py-3.5"><Badge tone={status.tone} dot>{status.label}</Badge></td>
-                      <td className="px-3 py-3.5">{pay ? <span className={`inline-flex px-2 py-0.5 rounded-md text-[10.5px] font-bold ${pay.bg}`}>{pay.label}</span> : <span className="text-ink-faint">—</span>}</td>
+                      <td className="px-3 py-3.5">
+                        <div className="flex items-center gap-1.5">
+                          {pay ? <span className={`inline-flex px-2 py-0.5 rounded-md text-[10.5px] font-bold ${pay.bg}`}>{pay.label}</span> : <span className="text-ink-faint">—</span>}
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${o.paymentStatus === 'paid' ? 'bg-success-soft text-success-text' : 'bg-surface text-ink-muted'}`}>
+                            {o.paymentStatus === 'paid' ? 'Paid' : 'Unpaid'}
+                          </span>
+                        </div>
+                      </td>
                       <td className="px-3 py-3.5 text-right font-semibold tabular-nums text-ink">{fmtIDR(o.total)}</td>
                       <td className="px-3 py-3.5 text-right text-ink-muted tabular-nums">{o.time}</td>
                       <td className="px-5 py-3.5 text-right">
@@ -211,7 +219,7 @@ const OrdersList = () => {
                               <p className="text-[10.5px] font-semibold text-ink-muted uppercase tracking-wider mb-2">Details</p>
                               <div className="space-y-1 text-[12.5px]">
                                 <div className="flex justify-between"><span className="text-ink-muted">Date</span><span className="text-ink tabular-nums">{o.date} · {o.time}</span></div>
-                                <div className="flex justify-between"><span className="text-ink-muted">Payment</span><span className="text-ink">{pay?.label ?? '—'}</span></div>
+                                <div className="flex justify-between"><span className="text-ink-muted">Payment</span><span className="text-ink">{pay?.label ?? '—'} · {o.paymentStatus === 'paid' ? 'Paid' : 'Unpaid'}</span></div>
                                 <div className="flex justify-between"><span className="text-ink-muted">Total</span><span className="text-ink font-semibold tabular-nums">{fmtIDR(o.total)}</span></div>
                               </div>
                             </div>

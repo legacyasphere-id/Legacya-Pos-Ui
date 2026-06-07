@@ -94,9 +94,9 @@ const POSCashier = () => {
       });
       if (payment === 'cash') {
         await payOrderCash(order.id, order.grand_total, crypto.randomUUID());
-        setToast({ kind: 'ok', text: `Paid · ${order.order_no} · ${fmtIDR(order.grand_total)}` });
+        setToast({ kind: 'ok', text: `${order.order_no} · Paid (cash) · sent to kitchen` });
       } else {
-        setToast({ kind: 'ok', text: `Order ${order.order_no} placed. Online payment (Midtrans) isn't configured yet — settle as cash or set up Midtrans.` });
+        setToast({ kind: 'ok', text: `${order.order_no} · sent to kitchen · awaiting ${payment.toUpperCase()} payment (Midtrans not configured yet)` });
       }
       setCart([]);
       setDiscountId(null);

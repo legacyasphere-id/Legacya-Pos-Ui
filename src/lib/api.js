@@ -67,7 +67,7 @@ export async function payOrderCash(orderId, amount, idempotencyKey) {
 
 // ── Orders / Kitchen ─────────────────────────────────────────────────────────
 const ORDER_SELECT =
-  'id, order_no, table_label, status, grand_total, placed_at, cooking_at, ' +
+  'id, order_no, table_label, status, payment_status, grand_total, placed_at, cooking_at, ' +
   'order_item(name_snapshot, qty), payment(method, status)';
 
 export async function getOrders({ limit = 100 } = {}) {
