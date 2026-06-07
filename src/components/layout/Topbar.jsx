@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Search, Bell, Command, Plus, Dot } from 'lucide-react';
+import { Search, Bell, Command, Plus, Dot, LogOut } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { routeMeta } from '../../data/routeMeta';
 import { useNotificationsStore } from '../../store/notifications.store';
+import { useAuthStore, initialsOf } from '../../store/auth.store';
 
 export const Topbar = () => {
   const location = useLocation();
@@ -13,6 +14,12 @@ export const Topbar = () => {
   const unreadCount = useNotificationsStore((state) =>
     state.items.filter((n) => !n.isRead).length
   );
+  const { session, profile, signOut } = useAuthStore();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <header className="h-16 bg-card border-b border-line flex items-center px-6 gap-4 shrink-0">
@@ -63,8 +70,38 @@ export const Topbar = () => {
           )}
         </button>
         <div className="w-px h-6 bg-line mx-1" />
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-deep flex items-center justify-center text-white font-semibold text-[12px]">
-          AR
+        <div className="relative">
+          <button
+            onClick={() => setMenuOpen((o) => !o)}
+            title={session?.user?.email}
+            className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-deep flex items-center justify-center text-white font-semibold text-[12px]"
+          >
+            {initialsOf(profile, session)}
+          </button>
+          {menuOpen && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
+              <div className="absolute right-0 mt-2 w-56 z-20 rounded-xl bg-card border border-line shadow-token-lg p-1">
+                <div className="px-3 py-2 border-b border-line-soft">
+                  <p className="text-[12.5px] font-semibold text-ink truncate">
+                    {profile?.full_name || 'Account'}
+                  </p>
+                  <p className="text-[11px] text-ink-muted truncate">{session?.user?.email}</p>
+                  {profile?.role && (
+                    <p className="mt-0.5 text-[10px] uppercase tracking-wider font-semibold text-primary-text">
+                      {profile.role}
+                    </p>
+                  )}
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium text-ink-soft hover:bg-surface hover:text-danger transition-colors"
+                >
+                  <LogOut size={15} /> Sign out
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </header>
