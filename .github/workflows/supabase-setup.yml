@@ -51,3 +51,5 @@ jobs:
           echo "Verifying..."
           psql "$CONN" -tAc "select 'menu_item rows = '||count(*) from menu_item;"
           psql "$CONN" -tAc "select 'tables with RLS = '||count(*) from pg_tables where schemaname='public' and rowsecurity;"
+
+# trigger: run after SUPABASE_DB_PASSWORD secret added
