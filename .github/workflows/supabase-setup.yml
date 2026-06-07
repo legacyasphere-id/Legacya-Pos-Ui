@@ -23,13 +23,26 @@ jobs:
         env:
           PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           PROJECT_REF: dlizxnlwhnbargobvzmi
-          POOLER_HOST: aws-0-ap-southeast-1.pooler.supabase.com
         run: |
           if [ -z "$PGPASSWORD" ]; then
             echo "::error::Add the SUPABASE_DB_PASSWORD repository secret, then re-run this workflow."
             exit 1
           fi
-          CONN="host=${POOLER_HOST} port=5432 user=postgres.${PROJECT_REF} dbname=postgres sslmode=require"
+          # Auto-detect the correct session-pooler host for the project.
+          CONN=""
+          for h in \
+            aws-0-ap-southeast-1.pooler.supabase.com \
+            aws-1-ap-southeast-1.pooler.supabase.com; do
+            if psql "host=$h port=5432 user=postgres.${PROJECT_REF} dbname=postgres sslmode=require" -c "select 1" >/dev/null 2>&1; then
+              CONN="host=$h port=5432 user=postgres.${PROJECT_REF} dbname=postgres sslmode=require"
+              echo "Connected via $h"
+              break
+            fi
+          done
+          if [ -z "$CONN" ]; then
+            echo "::error::Could not connect through the pooler. Check the SUPABASE_DB_PASSWORD secret value (it must be your current database password)."
+            exit 1
+          fi
           for f in 01_init_a 02_init_b 03_init_c 04_rls 05_functions_a 06_functions_b 07_seed; do
             echo "::group::Applying $f"
             psql "$CONN" -v ON_ERROR_STOP=1 -f "supabase/setup_chunks/${f}.sql"
