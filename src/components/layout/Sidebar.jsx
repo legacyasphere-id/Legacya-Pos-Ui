@@ -5,6 +5,7 @@ import { Logo } from './Logo';
 import { navGroups } from '../../data/navGroups';
 import { useUiStore } from '../../store/ui.store';
 import { useNotificationsStore } from '../../store/notifications.store';
+import { useAuthStore, initialsOf } from '../../store/auth.store';
 import { tokens } from '../../data/tokens';
 
 export const Sidebar = () => {
@@ -13,6 +14,7 @@ export const Sidebar = () => {
   const unreadCount = useNotificationsStore((state) =>
     state.items.filter((n) => !n.isRead).length
   );
+  const { session, profile } = useAuthStore();
 
   return (
     <aside
@@ -85,12 +87,16 @@ export const Sidebar = () => {
           }`}
         >
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-deep flex items-center justify-center text-white font-semibold text-[13px] shrink-0">
-            AR
+            {initialsOf(profile, session)}
           </div>
           {!collapsed && (
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-semibold text-ink truncate">Arif Rahman</p>
-              <p className="text-[11px] text-ink-muted truncate">Owner · Cabang Kemang</p>
+              <p className="text-[13px] font-semibold text-ink truncate">
+                {profile?.full_name || session?.user?.email || 'Account'}
+              </p>
+              <p className="text-[11px] text-ink-muted truncate capitalize">
+                {profile?.role || 'Member'}
+              </p>
             </div>
           )}
         </div>
