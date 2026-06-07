@@ -1,0 +1,45 @@
+name: Supabase apply patches
+
+# Applies the idempotent patch migrations (0003+) to the linked project WITHOUT
+# resetting — safe on a live database with real data. Re-runnable.
+# Uses the SUPABASE_DB_PASSWORD repo secret.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/split-payment-status]
+    paths: ['.github/workflows/apply-patches.yml', 'supabase/migrations/2025010100000[3-9]_*.sql']
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply patch migrations (no reset)
+        env:
+          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          PROJECT_REF: dlizxnlwhnbargobvzmi
+          PGCONNECT_TIMEOUT: '15'
+          PGOPTIONS: '-c lock_timeout=20000 -c statement_timeout=120000'
+        run: |
+          if [ -z "$PGPASSWORD" ]; then
+            echo "::error::Add the SUPABASE_DB_PASSWORD repository secret, then re-run."
+            exit 1
+          fi
+          CONN=""
+          for h in aws-1-ap-south-1.pooler.supabase.com aws-0-ap-south-1.pooler.supabase.com; do
+            if psql "host=$h port=5432 user=postgres.${PROJECT_REF} dbname=postgres sslmode=require" -c "select 1" >/dev/null 2>&1; then
+              CONN="host=$h port=5432 user=postgres.${PROJECT_REF} dbname=postgres sslmode=require"
+              echo "Connected via $h"; break
+            fi
+          done
+          if [ -z "$CONN" ]; then echo "::error::Could not connect through the pooler."; exit 1; fi
+          # Apply every patch migration (0003 and up), in order. All are idempotent.
+          for f in $(ls supabase/migrations/2025010100000[3-9]_*.sql | sort); do
+            echo "::group::Applying $(basename "$f")"
+            psql "$CONN" -v ON_ERROR_STOP=1 -f "$f"
+            echo "::endgroup::"
+          done
+          echo "Verifying..."
+          psql "$CONN" -tAc "select 'order.payment_status exists = '||count(*) from information_schema.columns where table_schema='public' and table_name='order' and column_name='payment_status';"
