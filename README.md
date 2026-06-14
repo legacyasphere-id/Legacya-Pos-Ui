@@ -1,40 +1,48 @@
 # LegacyaPos — Restaurant POS with AI Insights
 
-> A portfolio-grade restaurant Point-of-Sale dashboard demonstrating **enterprise SaaS UI craft**, **multi-role product thinking**, and **AI-augmented decision support** — built end-to-end as 9 production-quality screens.
+> A portfolio-grade restaurant Point-of-Sale system demonstrating **enterprise SaaS UI craft**, **multi-role product thinking**, and **AI-augmented decision support** — built with a live Supabase backend powering 5 of 9 screens.
 
 <div align="center">
 
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white&style=flat-square)
 ![Vite](https://img.shields.io/badge/Vite-Ready-646CFF?logo=vite&logoColor=white&style=flat-square)
 ![Tailwind](https://img.shields.io/badge/Tailwind-3-06B6D4?logo=tailwindcss&logoColor=white&style=flat-square)
-![Recharts](https://img.shields.io/badge/Recharts-data%20viz-FF6B6B?style=flat-square)
-![Status](https://img.shields.io/badge/Status-9%2F9%20screens%20shipped-22C55E?style=flat-square)
+![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL%20%2B%20Realtime-3ECF8E?logo=supabase&logoColor=white&style=flat-square)
+![Status](https://img.shields.io/badge/Backend-5%2F9%20screens%20live-22C55E?style=flat-square)
 
 </div>
 
 ---
-## 🔗 Live Demo
+
+## Live Demo
+
 https://legacya-pos-ui-129q.vercel.app
 
 ---
 
-## ✦ Screenshots
+## Backend Status
 
-| Dashboard | POS Cashier | Kitchen Display |
-|-----------|-------------|-----------------|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Cashier](docs/screenshots/cashier.png) | ![Kitchen](docs/screenshots/kitchen.png) |
+| Screen | Status |
+|--------|--------|
+| Auth (login, role guard) | ✅ Live — Supabase Auth + `profiles` table |
+| Menu Management | ✅ Live — categories, items, availability toggle persists |
+| POS Cashier | ✅ Live — `place_order` + `pay_order_cash` RPCs, live discounts + tax |
+| Orders List | ✅ Live — real orders with status filters, revenue stats |
+| Kitchen Display | ✅ Live — Realtime subscription + 10s polling, elapsed timer |
+| Inventory | 🔲 Mock data |
+| Analytics | 🔲 Mock data |
+| Notifications | 🔲 Mock data |
+| Settings | 🔲 Mock data |
 
 ---
 
-## ✦ Why this project exists
+## Why This Project Exists
 
-Most "POS UI" mockups stop at a pretty dashboard. LegacyaPos is built to demonstrate **product depth** — three distinct user roles, real interaction patterns, AI-informed actions, and 9 fully designed screens that share one cohesive design system.
-
-It is intentionally scoped to be **shippable**, not just renderable.
+Most "POS UI" mockups stop at a pretty dashboard. LegacyaPos is built to demonstrate **product depth** — three distinct user roles, real interaction patterns, AI-informed actions, and 9 fully designed screens that share one cohesive design system, backed by a production Supabase database with RLS.
 
 ---
 
-## ✦ The three personas
+## The Three Personas
 
 | Persona | Device | Priority screen | Constraint |
 |---------|--------|-----------------|------------|
@@ -42,168 +50,113 @@ It is intentionally scoped to be **shippable**, not just renderable.
 | 🧾 **Cashier** | Tablet landscape | POS Cashier | Complete order in <30 sec |
 | 👨‍🍳 **Kitchen** | Wall-mounted display | Kitchen Display | Readable from 2 meters |
 
-Every screen was designed around one of these jobs-to-be-done — not as a generic "admin panel."
+---
+
+## The 9 Screens
+
+| # | Screen | Backend | Signature detail |
+|---|--------|---------|------------------|
+| 1 | **Dashboard** | 🔲 Mock | AI insight panel · sparkline stat cards |
+| 2 | **POS Cashier** | ✅ Live | Two-pane tablet layout · live menu from Supabase · `place_order` RPC |
+| 3 | **Orders List** | ✅ Live | Real orders · expandable rows · `payment_status` axis |
+| 4 | **Kitchen Display** | ✅ Live | Realtime + polling · elapsed timer from `cooking_at` |
+| 5 | **Inventory** | 🔲 Mock | Stock bar viz · AI prediction banner |
+| 6 | **Menu Management** | ✅ Live | Availability toggle persists to Supabase (optimistic) |
+| 7 | **Analytics** | 🔲 Mock | Hour×Day heatmap · category donut |
+| 8 | **Notifications** | 🔲 Mock | Time-grouped feed · multi-channel preferences |
+| 9 | **Settings** | 🔲 Mock | Live thermal receipt preview · sticky save bar |
 
 ---
 
-## ✦ The 9 screens
+## Tech Stack
 
-| # | Screen | Phase | Signature detail |
-|---|--------|-------|------------------|
-| 1 | **Dashboard** | 2 | AI insight panel · sparkline stat cards · w-o-w revenue comparison |
-| 2 | **POS Cashier** | 2 | Two-pane tablet layout · 44px tap targets · single-tap discount pills |
-| 3 | **Orders List** | 2 | Expandable rows with receipt actions · status filter w/ live counts |
-| 4 | **Kitchen Display** | 2 | Urgency-based ring colors · live elapsed timer · 10min+ pulse alert |
-| 5 | **Inventory** | 3 | Stock bar viz · ETA-out predictions · AI prediction banner |
-| 6 | **Menu Management** | 3 | Grid/list view toggle · hover-reveal actions · inline availability switch |
-| 7 | **Analytics** | 3 | **Hour × Day heatmap** (signature viz) · category donut · payment mix |
-| 8 | **Notifications** | 4 | Time-grouped feed · multi-channel preferences · digest sidebar |
-| 9 | **Settings** | 4 | Internal sidebar nav · **live thermal receipt preview** · sticky save bar |
+| Layer | Choice |
+|-------|--------|
+| UI | React 18 |
+| Build | Vite |
+| Styling | Tailwind CSS |
+| Charts | Recharts |
+| Icons | Lucide React |
+| State | Zustand (auth store) |
+| Backend | Supabase PostgreSQL + RLS + Realtime |
+| Auth | Supabase Auth + `profiles` + `app_role` enum |
+| Deployment | Vercel (frontend) + Supabase (backend) |
 
 ---
 
-## ✦ Design philosophy
+## Database Schema (P1)
+
+```sql
+profiles          -- id, role (app_role enum: owner/cashier/kitchen/staff)
+category          -- id, name, sort_order
+menu_item         -- id, category_id, name, price, available, stock_qty
+ingredient        -- id, name, unit, stock_qty, min_stock
+order             -- id, status (order_status enum), payment_status (order_payment_status enum), total
+order_item        -- id, order_id, menu_item_id, qty, unit_price
+payment           -- id, order_id, method, amount
+stock_movement    -- id, ingredient_id, type, qty, order_id
+discount          -- id, name, type, value, active
+settings          -- singleton config (tax_rate, restaurant_name, etc.)
+```
+
+**Key design decision:** `order.status` = kitchen/fulfillment axis only. `order.payment_status` = payment axis. Cash orders run through the kitchen queue (`pending → cooking → ready → done`) while `payment_status = 'paid'` immediately.
+
+---
+
+## Design Philosophy
 
 **Enterprise fintech, not generic admin template.**
 
-- 🎨 **Light theme only**, deliberate whitespace, soft shadows, rounded-2xl cards
-- 📐 `tabular-nums` everywhere numbers appear — fintech-grade alignment
-- 🎯 **Three card variants** by context (KPICard, StatChip, MenuStat) — not one-size-fits-all
-- 🪶 **Custom components over libraries** where it matters (heatmap, sparklines, receipt preview) — keeps bundle lean and design ownership tight
-- 🤖 **AI insights as a cohesive panel** with confidence indicators — not isolated cards spitting vague advice
+- Light theme only, deliberate whitespace, soft shadows, `rounded-2xl` cards
+- `tabular-nums` everywhere numbers appear — fintech-grade alignment
+- Three card variants by context (KPICard, StatChip, MenuStat)
+- Custom components over libraries where it matters (heatmap, sparklines, receipt preview)
+- AI insights as a cohesive panel with confidence indicators
 
-### Color tokens
+### Color Tokens
 
 ```css
---primary:       #4A7FA7    /* enterprise blue */
---primary-soft:  #DCEAF5    /* tints, active states */
---bg:            #F6F9FC    /* canvas */
---text-main:     #1E293B    /* slate-800 */
---text-soft:     #64748B    /* slate-500 */
+--primary:       #4A7FA7
+--primary-soft:  #DCEAF5
+--bg:            #F6F9FC
+--text-main:     #1E293B
+--text-soft:     #64748B
 --success:       #22C55E
 --warning:       #F59E0B
 --danger:        #EF4444
 ```
 
-### Typography
-
-- **Display:** Plus Jakarta Sans (600–700) — headings, numbers
-- **Body:** Inter (400–500) — UI text, descriptions
-
 ---
 
-## ✦ Tech stack
-
-| Layer | Choice | Why |
-|-------|--------|-----|
-| UI | React 18 | Industry baseline |
-| Build | Vite | Fast HMR, ESM-native |
-| Styling | Tailwind CSS | Utility-first, no component library bloat |
-| Charts | Recharts | Composable, theming-friendly |
-| Icons | Lucide React | Consistent stroke, premium feel |
-| State | `useState` + `useMemo` (Zustand-ready) | Minimum surface area, easy to extract |
-| Data | Mock JSON / local constants | No backend required to demo |
-
----
-
-## ✦ Repo structure (recommended)
-
-```
-legacyapos/
-├── README.md
-├── LICENSE
-├── .gitignore
-└── artifacts/
-    ├── 01-foundation.jsx          # Phase 1 — design system + shell
-    ├── 02-dashboard.jsx           # Phase 2 — owner dashboard
-    ├── 03-operations.jsx          # Phase 2 — POS + Orders + Kitchen
-    ├── 04-management.jsx          # Phase 3 — Analytics + Inventory + Menu
-    └── 05-system.jsx              # Phase 4 — Notifications + Settings
-```
-
-> Each artifact is a self-contained React component runnable in any Vite + Tailwind project. Drop into `src/App.jsx`, install deps (`recharts`, `lucide-react`), and it renders.
-
----
-
-## ✦ User scenarios driving the design
-
-**Scenario A — Cashier flow (target: <30 sec)**
-> Open POS → select table → add 3 menu items → apply 10% discount → confirm payment → print receipt.
-
-**Scenario B — Owner morning check (target: <2 min)**
-> Open dashboard → check yesterday's revenue → read AI insights → check inventory alerts → review top menu.
-
-**Scenario C — Kitchen flow (live, hands-free)**
-> Order arrives → display auto-updates → tap "Start Cooking" → tap "Done" → order disappears from queue.
-
----
-
-## ✦ AI insights system
-
-AI is rendered as a **cohesive panel**, not isolated cards. Every insight has:
-
-- 🏷️ Category tag (Sales / Inventory / Traffic)
-- 📰 Single-line headline
-- 📊 Supporting data point
-- ✅ Confidence indicator (High / Medium)
-
-**Tone:** data-confident, concise, actionable. No vague fluff.
-
-> Example: _"Burger bun may deplete in ~8 hours at current burn rate. Stock 8 units · 24/day burn."_ — High confidence
-
----
-
-## ✦ Status
-
-**Phase 1 — Foundation** ✅
-Design tokens, typography, base components, layout shell, mock data
-
-**Phase 2 — Operations** ✅
-Dashboard, POS Cashier, Orders, Kitchen Display
-
-**Phase 3 — Management** ✅
-Analytics, Inventory, Menu Management
-
-**Phase 4 — System** ✅
-Notifications, Settings
-
-**Roadmap (optional)**
-- ✅ Bundle as full Vite project with Zustand store & React Router
-- ✅ Deploy live demo (Vercel)
-- 🔲 Full case study write-up
-- 🔲 Loom walkthrough
-
----
-
-## ✦ How to run an artifact locally
+## Getting Started
 
 ```bash
-# create vite project
-npm create vite@latest legacyapos -- --template react
-cd legacyapos
-
-# install deps
+git clone https://github.com/legacyasphere-id/Legacya-Pos-Ui.git
+cd Legacya-Pos-Ui
 npm install
-npm install recharts lucide-react
-
-# add tailwind (follow https://tailwindcss.com/docs/guides/vite)
-
-# drop one of the artifact files into src/App.jsx
-# then:
+# Copy .env.example → .env and fill in Supabase keys
 npm run dev
 ```
 
----
-
-## ✦ Credits
-
-Designed & built by **[Yoga P. Effendi](https://github.com/legacyasphere-id)** — AI fullstack designer-engineer.
-
-Built with intentional care for taste, hierarchy, and the boring details (spacing, alignment, transitions) that separate generic admin UIs from real products.
-
-> _If you're hiring or want to collaborate, find me at [github.com/legacyasphere-id](https://github.com/legacyasphere-id)._
+Run Supabase migrations (`supabase/migrations/`) and seed with `supabase/seed.sql` for a working local backend.
 
 ---
+
+## Changelog
+
+| Date | What changed |
+|------|--------------|
+| Jun 7, 2026 | **Payment split from fulfillment**: `order.payment_status` axis added; cash orders now flow through kitchen queue. Migration 0005 + `pay_order_cash` updated. |
+| Jun 7, 2026 | **Orders + Kitchen wired**: real order list, Kitchen Realtime subscription + 10s polling, elapsed timer. |
+| Jun 7, 2026 | **`auth_role()` fix**: was reading JWT `role` claim (`'authenticated'`) instead of `profiles` table, causing `invalid input value for enum app_role` on every RPC. |
+| Jun 7, 2026 | **Auth + Menu + Cashier wired**: Supabase auth store, RequireAuth guard, live menu categories, `place_order` + `pay_order_cash` RPCs. |
+| Pre-Jun 7 | 9 screens designed and shipped as mock UI (design system, all layouts complete) |
+
+---
+
+## Credits
+
+Designed & built by **[Yoga P. Effendi](https://github.com/legacyasphere-id)** · AI fullstack designer-engineer · 2026
 
 <div align="center">
 
