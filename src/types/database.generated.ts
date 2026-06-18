@@ -1,11 +1,6 @@
-// THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY.
-// Re-generate with: supabase gen types typescript --project-id dlizxnlwhnbargobvzmi > src/types/database.generated.ts
-
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: '14.5';
   };
@@ -1029,12 +1024,6 @@ export type Database = {
           ref_order_id: string | null;
           type: string;
         };
-        SetofOptions: {
-          from: '*';
-          to: 'stock_movement';
-          isOneToOne: true;
-          isSetofReturn: false;
-        };
       };
       advance_order_status: {
         Args: {
@@ -1065,12 +1054,6 @@ export type Database = {
           tax_total: number;
           updated_at: string;
         };
-        SetofOptions: {
-          from: '*';
-          to: 'order';
-          isOneToOne: true;
-          isSetofReturn: false;
-        };
       };
       auth_role: {
         Args: never;
@@ -1099,12 +1082,6 @@ export type Database = {
           raw_payload: Json | null;
           status: Database['public']['Enums']['payment_status'];
         };
-        SetofOptions: {
-          from: '*';
-          to: 'payment';
-          isOneToOne: true;
-          isSetofReturn: false;
-        };
       };
       place_order: {
         Args: { payload: Json };
@@ -1132,12 +1109,6 @@ export type Database = {
           tax_total: number;
           updated_at: string;
         };
-        SetofOptions: {
-          from: '*';
-          to: 'order';
-          isOneToOne: true;
-          isSetofReturn: false;
-        };
       };
       retail_adjust_stock: {
         Args: {
@@ -1158,12 +1129,37 @@ export type Database = {
           qty_delta: number;
           reference_id: string | null;
         };
-        SetofOptions: {
-          from: '*';
-          to: 'inventory_movement';
-          isOneToOne: true;
-          isSetofReturn: false;
+      };
+      retail_checkout: {
+        Args: {
+          p_discount_amt?: number;
+          p_discount_id?: string;
+          p_grand_total?: number;
+          p_items: Json;
+          p_note?: string;
+          p_subtotal?: number;
+          p_tax_amt?: number;
+          p_txn_no: string;
         };
+        Returns: {
+          cashier_id: string | null;
+          completed_at: string | null;
+          created_at: string;
+          discount_amount: number;
+          discount_id: string | null;
+          grand_total: number;
+          id: string;
+          note: string | null;
+          payment_status: Database['public']['Enums']['order_payment_status'];
+          status: Database['public']['Enums']['transaction_status'];
+          subtotal: number;
+          tax_amount: number;
+          txn_no: string;
+          updated_at: string;
+          void_reason: string | null;
+          voided_at: string | null;
+          voided_by: string | null;
+        }[];
       };
     };
     Enums: {
