@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {
-  ReceiptText, TrendingUp, Clock, Flame, Hash,
+  ReceiptText, TrendingUp, Clock, Hash,
   Search, MoreHorizontal, ChevronDown, Calendar,
   SlidersHorizontal, Download, ArrowUpDown, Printer, Eye, AlertCircle,
 } from 'lucide-react';
@@ -13,18 +13,17 @@ import { tokens } from '../data/tokens';
 import { getOrders } from '../lib/api';
 
 const orderStatusMeta = {
-  pending: { tone: 'neutral', label: 'Pending' },
-  cooking: { tone: 'warning', label: 'Cooking' },
-  ready:   { tone: 'primary', label: 'Ready' },
-  done:    { tone: 'primary', label: 'Served' },
-  paid:    { tone: 'success', label: 'Paid' },
-  void:    { tone: 'danger',  label: 'Void' },
+  pending:   { tone: 'neutral', label: 'Open' },
+  open:      { tone: 'neutral', label: 'Open' },
+  completed: { tone: 'success', label: 'Completed' },
+  done:      { tone: 'success', label: 'Completed' },
+  void:      { tone: 'danger',  label: 'Void' },
 };
 
 const paymentMeta = {
-  qris:          { label: 'QRIS', bg: 'bg-primary-soft text-primary-text' },
-  card:          { label: 'Card', bg: 'bg-surface text-ink-strong' },
-  cash:          { label: 'Cash', bg: 'bg-success-soft text-success-text' },
+  qris:          { label: 'QRIS',     bg: 'bg-primary-soft text-primary-text' },
+  card:          { label: 'Card',     bg: 'bg-surface text-ink-strong' },
+  cash:          { label: 'Cash',     bg: 'bg-success-soft text-success-text' },
   ewallet:       { label: 'E-Wallet', bg: 'bg-warning-soft text-warning-text' },
   bank_transfer: { label: 'Transfer', bg: 'bg-surface text-ink-strong' },
 };
@@ -50,13 +49,14 @@ const StatChip = ({ label, value, icon: Icon, tone = 'neutral' }) => {
 
 const mapOrder = (o) => {
   const when = o.placed_at ? new Date(o.placed_at) : null;
+  const isCompleted = o.payment_status === 'paid' || o.status === 'done';
+  const displayStatus = o.status === 'void' ? 'void' : isCompleted ? 'completed' : 'pending';
   return {
     id: o.order_no,
     rowId: o.id,
-    table: o.table_label ?? '—',
     items: (o.order_item ?? []).map((it) => ({ name: it.name_snapshot, qty: it.qty })),
     total: o.grand_total,
-    status: o.status,
+    status: displayStatus,
     paymentStatus: o.payment_status,
     payment: o.payment?.[0]?.method ?? null,
     time: when ? format(when, 'HH:mm') : '—',
@@ -86,23 +86,22 @@ const OrdersList = () => {
   }, []);
 
   const counts = useMemo(() => ({
-    all: orders.length,
-    pending: orders.filter((o) => o.status === 'pending').length,
-    cooking: orders.filter((o) => o.status === 'cooking').length,
-    ready: orders.filter((o) => o.status === 'ready').length,
-    done: orders.filter((o) => o.status === 'done').length,
-    paid: orders.filter((o) => o.paymentStatus === 'paid').length,
+    all:       orders.length,
+    open:      orders.filter((o) => o.status === 'pending').length,
+    completed: orders.filter((o) => o.status === 'completed').length,
+    void:      orders.filter((o) => o.status === 'void').length,
   }), [orders]);
 
   const filtered = useMemo(() => {
     let res = filter === 'all' ? orders : orders.filter((o) => o.status === filter);
     if (search) res = res.filter((o) =>
-      o.id.toLowerCase().includes(search.toLowerCase()) || String(o.table).includes(search));
+      o.id.toLowerCase().includes(search.toLowerCase()));
     return res;
   }, [orders, filter, search]);
 
   const totalRevenue = orders.filter((o) => o.paymentStatus === 'paid').reduce((s, o) => s + o.total, 0);
-  const avgOrder = counts.paid ? Math.round(totalRevenue / counts.paid) : 0;
+  const completedCount = counts.completed;
+  const avgOrder = completedCount ? Math.round(totalRevenue / completedCount) : 0;
 
   if (loading) {
     return <div className="h-64 flex items-center justify-center"><div className="h-7 w-7 rounded-full border-2 border-line border-t-primary animate-spin" /></div>;
@@ -113,11 +112,10 @@ const OrdersList = () => {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
-        <StatChip label="Today's revenue" value={fmtIDRShort(totalRevenue)} icon={TrendingUp} tone="primary" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <StatChip label="Revenue" value={fmtIDRShort(totalRevenue)} icon={TrendingUp} tone="primary" />
         <StatChip label="Total orders" value={counts.all} icon={ReceiptText} />
-        <StatChip label="Pending" value={counts.pending} icon={Clock} tone="neutral" />
-        <StatChip label="Cooking" value={counts.cooking} icon={Flame} tone="warning" />
+        <StatChip label="Open" value={counts.open} icon={Clock} tone="neutral" />
         <StatChip label="Avg order" value={fmtIDRShort(avgOrder)} icon={Hash} />
       </div>
 
@@ -125,11 +123,10 @@ const OrdersList = () => {
         <div className="flex items-center gap-3 p-4 border-b border-line-soft flex-wrap">
           <div className="flex items-center gap-0.5 bg-app rounded-lg p-0.5">
             {[
-              { id: 'all', label: 'All', count: counts.all },
-              { id: 'pending', label: 'Pending', count: counts.pending },
-              { id: 'cooking', label: 'Cooking', count: counts.cooking },
-              { id: 'ready', label: 'Ready', count: counts.ready },
-              { id: 'done', label: 'Served', count: counts.done },
+              { id: 'all',       label: 'All',       count: counts.all },
+              { id: 'pending',   label: 'Open',      count: counts.open },
+              { id: 'completed', label: 'Completed', count: counts.completed },
+              { id: 'void',      label: 'Void',      count: counts.void },
             ].map((t) => (
               <button key={t.id} onClick={() => setFilter(t.id)}
                 className={`px-3 h-8 rounded-md text-[12px] font-semibold transition-colors inline-flex items-center gap-1.5 ${
@@ -145,7 +142,7 @@ const OrdersList = () => {
           <div className="relative flex-1 max-w-xs">
             <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
             <input value={search} onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search ID or table…"
+              placeholder="Search order ID…"
               className="w-full h-9 pl-9 pr-3 rounded-lg bg-app text-[12.5px] border border-transparent focus:outline-none focus:border-primary focus:bg-card transition-all" />
           </div>
           <div className="ml-auto flex items-center gap-2">
@@ -161,7 +158,6 @@ const OrdersList = () => {
               <tr className="text-[10.5px] font-semibold text-ink-muted uppercase tracking-wider bg-surface-2">
                 <th className="text-left px-5 py-2.5 w-8"></th>
                 <th className="text-left px-3 py-2.5"><span className="inline-flex items-center gap-1">Order ID <ArrowUpDown size={11} /></span></th>
-                <th className="text-left px-3 py-2.5">Table</th>
                 <th className="text-left px-3 py-2.5">Items</th>
                 <th className="text-left px-3 py-2.5">Status</th>
                 <th className="text-left px-3 py-2.5">Payment</th>
@@ -172,7 +168,7 @@ const OrdersList = () => {
             </thead>
             <tbody>
               {filtered.length === 0 && (
-                <tr><td colSpan={9} className="px-5 py-10 text-center text-[13px] text-ink-muted">No orders match.</td></tr>
+                <tr><td colSpan={8} className="px-5 py-10 text-center text-[13px] text-ink-muted">No orders match.</td></tr>
               )}
               {filtered.map((o) => {
                 const status = orderStatusMeta[o.status] ?? { tone: 'neutral', label: o.status };
@@ -184,7 +180,6 @@ const OrdersList = () => {
                       className={`text-[13px] hover:bg-surface-2 transition-colors cursor-pointer border-t border-surface ${isExpanded ? 'bg-surface-2' : ''}`}>
                       <td className="px-5 py-3.5"><ChevronDown size={14} className={`text-ink-muted transition-transform ${isExpanded ? 'rotate-180' : ''}`} /></td>
                       <td className="px-3 py-3.5 font-semibold tabular-nums text-ink">{o.id}</td>
-                      <td className="px-3 py-3.5"><span className="inline-flex items-center justify-center min-w-7 h-7 px-1.5 rounded-md bg-app text-[12px] font-bold text-ink tabular-nums">{o.table}</span></td>
                       <td className="px-3 py-3.5 text-ink-soft max-w-[280px]"><span className="truncate block">{o.items.map((i) => `${i.name} ×${i.qty}`).join(', ') || '—'}</span></td>
                       <td className="px-3 py-3.5"><Badge tone={status.tone} dot>{status.label}</Badge></td>
                       <td className="px-3 py-3.5">
@@ -203,7 +198,7 @@ const OrdersList = () => {
                     </tr>
                     {isExpanded && (
                       <tr className="bg-surface-2 border-t border-surface">
-                        <td colSpan={9} className="px-5 py-4">
+                        <td colSpan={8} className="px-5 py-4">
                           <div className="flex items-start gap-6 flex-wrap">
                             <div className="flex-1 min-w-[240px]">
                               <p className="text-[10.5px] font-semibold text-ink-muted uppercase tracking-wider mb-2">Items</p>
