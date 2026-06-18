@@ -555,6 +555,7 @@ export type Database = {
       };
       product: {
         Row: {
+          archived: boolean;
           barcode: string | null;
           category_id: string | null;
           cost_price: number;
@@ -572,6 +573,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          archived?: boolean;
           barcode?: string | null;
           category_id?: string | null;
           cost_price?: number;
@@ -589,6 +591,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          archived?: boolean;
           barcode?: string | null;
           category_id?: string | null;
           cost_price?: number;
@@ -1132,6 +1135,32 @@ export type Database = {
         SetofOptions: {
           from: '*';
           to: 'order';
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      retail_adjust_stock: {
+        Args: {
+          p_kind?: Database['public']['Enums']['inventory_movement_kind'];
+          p_note?: string;
+          p_product_id: string;
+          p_qty_delta: number;
+          p_reference_id?: string;
+        };
+        Returns: {
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          inventory_id: string;
+          kind: Database['public']['Enums']['inventory_movement_kind'];
+          note: string | null;
+          qty_after: number;
+          qty_delta: number;
+          reference_id: string | null;
+        };
+        SetofOptions: {
+          from: '*';
+          to: 'inventory_movement';
           isOneToOne: true;
           isSetofReturn: false;
         };

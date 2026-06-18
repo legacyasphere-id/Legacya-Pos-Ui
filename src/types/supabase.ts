@@ -208,6 +208,7 @@ export interface Product {
   emoji: string | null;
   image_url: string | null;
   is_available: boolean;
+  archived: boolean;
   track_inventory: boolean;
   sort_order: number;
   created_at: string;
