@@ -198,3 +198,31 @@ describe('productService.searchProducts', () => {
     expect(chain['eq']).toHaveBeenCalledWith('archived', false);
   });
 });
+
+describe('productService.getProductCategories', () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it('returns list of categories', async () => {
+    const cats = [
+      { id: 'cat-1', name: 'Beverages' },
+      { id: 'cat-2', name: 'Food' },
+    ];
+    mockFrom.mockReturnValue(makeChain({ data: cats, error: null }));
+    const result = await productService.getProductCategories();
+    expect(result).toHaveLength(2);
+    expect(result[0].name).toBe('Beverages');
+  });
+
+  it('queries product_category table', async () => {
+    mockFrom.mockReturnValue(makeChain({ data: [], error: null }));
+    await productService.getProductCategories();
+    expect(mockFrom).toHaveBeenCalledWith('product_category');
+  });
+
+  it('throws on error', async () => {
+    mockFrom.mockReturnValue(makeChain({ data: null, error: { message: 'forbidden' } }));
+    await expect(productService.getProductCategories()).rejects.toMatchObject({
+      message: 'forbidden',
+    });
+  });
+});

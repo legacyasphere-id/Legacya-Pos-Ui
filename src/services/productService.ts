@@ -8,6 +8,7 @@ export type ProductUpdate = TablesUpdate<'product'>;
 
 export type ProductWithCategory = Product & {
   product_category: Pick<ProductCategory, 'id' | 'name'> | null;
+  inventory: Pick<Tables<'inventory'>, 'qty_on_hand' | 'reorder_point' | 'unit'> | null;
 };
 
 export interface ProductFilters {
@@ -19,7 +20,7 @@ export interface ProductFilters {
 const PRODUCT_SELECT =
   'id, name, sku, barcode, description, price, cost_price, emoji, image_url, ' +
   'is_available, archived, track_inventory, sort_order, category_id, created_at, updated_at, ' +
-  'product_category(id, name)';
+  'product_category(id, name), inventory(qty_on_hand, reorder_point, unit)';
 
 export const productService = {
   async getProducts(filters?: ProductFilters): Promise<ProductWithCategory[]> {
@@ -91,5 +92,14 @@ export const productService = {
       .order('name');
     if (error) throw error;
     return (data ?? []) as unknown as ProductWithCategory[];
+  },
+
+  async getProductCategories(): Promise<ProductCategory[]> {
+    const { data, error } = await supabase
+      .from('product_category')
+      .select('id, name')
+      .order('name');
+    if (error) throw error;
+    return (data ?? []) as unknown as ProductCategory[];
   },
 };
