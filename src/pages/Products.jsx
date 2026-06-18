@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {
-  UtensilsCrossed, TrendingUp, Tag, Layers,
-  Search, Pencil, Trash2, Plus, Grid3X3, List, AlertCircle,
+  Package, TrendingUp, Tag, Layers,
+  Search, Plus, Grid3X3, List, AlertCircle,
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from '../components/ui/Button';
@@ -17,7 +17,7 @@ const relTime = (iso) => {
   catch { return '—'; }
 };
 
-const MenuStat = ({ label, value, sub, icon: Icon, valueClass = '' }) => (
+const ProductStat = ({ label, value, sub, icon: Icon, valueClass = '' }) => (
   <Card className="p-4 flex items-center gap-3">
     <div className="w-11 h-11 rounded-xl bg-primary-soft flex items-center justify-center shrink-0">
       <Icon size={18} className="text-primary-text" strokeWidth={2.2} />
@@ -30,7 +30,7 @@ const MenuStat = ({ label, value, sub, icon: Icon, valueClass = '' }) => (
   </Card>
 );
 
-const MenuView = () => {
+const ProductsView = () => {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,9 +42,9 @@ const MenuView = () => {
   useEffect(() => {
     (async () => {
       try {
-        const [cats, menu] = await Promise.all([getCategories(), getMenuItems()]);
+        const [cats, products] = await Promise.all([getCategories(), getMenuItems()]);
         setCategories(cats);
-        setItems(menu.map((m) => ({
+        setItems(products.map((m) => ({
           id: m.id,
           name: m.name,
           price: m.price,
@@ -55,7 +55,7 @@ const MenuView = () => {
           updated: relTime(m.updated_at),
         })));
       } catch (e) {
-        setError(e?.message || 'Failed to load menu');
+        setError(e?.message || 'Failed to load products');
       } finally {
         setLoading(false);
       }
@@ -66,16 +66,16 @@ const MenuView = () => {
     const item = items.find((i) => i.id === id);
     if (!item) return;
     const next = !item.available;
-    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, available: next } : i))); // optimistic
+    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, available: next } : i)));
     try {
       await setMenuItemAvailability(id, next);
     } catch {
-      setItems((prev) => prev.map((i) => (i.id === id ? { ...i, available: !next } : i))); // revert
+      setItems((prev) => prev.map((i) => (i.id === id ? { ...i, available: !next } : i)));
     }
   };
 
   const catTabs = useMemo(
-    () => [{ id: 'all', label: 'All items' }, ...categories.map((c) => ({ id: c.id, label: c.name }))],
+    () => [{ id: 'all', label: 'All products' }, ...categories.map((c) => ({ id: c.id, label: c.name }))],
     [categories],
   );
 
@@ -107,10 +107,10 @@ const MenuView = () => {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <MenuStat label="Total menu items" value={totalItems} sub={`${activeItems} available`} icon={UtensilsCrossed} />
-        <MenuStat label="Available" value={activeItems} sub={`${totalItems - activeItems} hidden`} icon={Layers} />
-        <MenuStat label="Categories" value={categories.length} sub={categories.map((c) => c.name).slice(0, 3).join(', ')} icon={Tag} />
-        <MenuStat label="Avg price" value={fmtIDRShort(avgPrice)} sub="Across all items" icon={TrendingUp} />
+        <ProductStat label="Total products" value={totalItems} sub={`${activeItems} available`} icon={Package} />
+        <ProductStat label="Available" value={activeItems} sub={`${totalItems - activeItems} hidden`} icon={Layers} />
+        <ProductStat label="Categories" value={categories.length} sub={categories.map((c) => c.name).slice(0, 3).join(', ')} icon={Tag} />
+        <ProductStat label="Avg price" value={fmtIDRShort(avgPrice)} sub="Across all products" icon={TrendingUp} />
       </div>
 
       <Card className="overflow-hidden">
@@ -129,7 +129,7 @@ const MenuView = () => {
           <div className="relative flex-1 max-w-xs">
             <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
             <input value={search} onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search menu…"
+              placeholder="Search products…"
               className="w-full h-8 pl-9 pr-3 rounded-lg bg-app text-[12.5px] border border-transparent focus:outline-none focus:border-primary focus:bg-card transition-all" />
           </div>
 
@@ -144,13 +144,13 @@ const MenuView = () => {
                   view === 'list' ? 'bg-card text-ink shadow-sm' : 'text-ink-muted hover:text-ink'
                 }`}><List size={14} strokeWidth={2.2} /></button>
             </div>
-            <Button variant="primary" size="sm" icon={Plus}>Add menu</Button>
+            <Button variant="primary" size="sm" icon={Plus}>Add product</Button>
           </div>
         </div>
 
         <div className="p-4">
           {filtered.length === 0 ? (
-            <p className="text-center text-[13px] text-ink-muted py-10">No items match.</p>
+            <p className="text-center text-[13px] text-ink-muted py-10">No products match.</p>
           ) : view === 'grid' ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
               {filtered.map((item) => (
@@ -183,7 +183,7 @@ const MenuView = () => {
             <table className="w-full">
               <thead>
                 <tr className="text-[10.5px] font-semibold text-ink-muted uppercase tracking-wider">
-                  <th className="text-left py-2.5">Item</th>
+                  <th className="text-left py-2.5">Product</th>
                   <th className="text-left py-2.5">Category</th>
                   <th className="text-right py-2.5">Price</th>
                   <th className="text-center py-2.5">Available</th>
@@ -216,11 +216,11 @@ const MenuView = () => {
   );
 };
 
-export default function MenuPage() {
+export default function ProductsPage() {
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="max-w-[1500px] mx-auto px-6 py-6">
-        <MenuView />
+        <ProductsView />
       </div>
     </div>
   );

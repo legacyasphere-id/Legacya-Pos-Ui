@@ -8,7 +8,7 @@ import CashierPage from './pages/Cashier';
 import OrdersPage from './pages/Orders';
 import AnalyticsPage from './pages/Analytics';
 import InventoryPage from './pages/Inventory';
-import MenuPage from './pages/Menu';
+import ProductsPage from './pages/Products';
 import NotificationsPage from './pages/Notifications';
 import SettingsPage from './pages/Settings';
 
@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
           { path: '/orders',        element: <OrdersPage /> },
           { path: '/analytics',     element: <AnalyticsPage /> },
           { path: '/inventory',     element: <InventoryPage /> },
-          { path: '/menu',          element: <MenuPage /> },
+          { path: '/products',      element: <ProductsPage /> },
           { path: '/notifications', element: <NotificationsPage /> },
           { path: '/settings',      element: <SettingsPage /> },
         ],
