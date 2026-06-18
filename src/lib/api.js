@@ -13,7 +13,9 @@ export async function getCategories() {
 export async function getMenuItems() {
   const { data, error } = await supabase
     .from('menu_item')
-    .select('id, name, price, emoji, image_url, is_available, category_id, updated_at, category(name)')
+    .select(
+      'id, name, price, emoji, image_url, is_available, category_id, updated_at, category(name)',
+    )
     .order('sort_order')
     .order('name');
   if (error) throw error;
@@ -90,13 +92,13 @@ export async function advanceOrderStatus(orderId, toStatus) {
 }
 
 // Realtime subscription on the order table. Returns an unsubscribe function.
-// (Requires the `order` table to be in the supabase_realtime publication; if it
-//  isn't, callers should also poll — see Kitchen.)
+// Requires the `order` table to be in the supabase_realtime publication.
 export function subscribeOrders(onChange) {
   const channel = supabase
     .channel('orders-stream')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'order' }, onChange)
     .subscribe();
-  return () => { supabase.removeChannel(channel); };
+  return () => {
+    supabase.removeChannel(channel);
+  };
 }
-
