@@ -1,6 +1,7 @@
 // Shared application-layer types (view models, store shapes, UI state)
 
-import type { AppRole, OrderStatus, OrderPaymentStatus, PaymentMethod } from './supabase';
+import type React from 'react';
+import type { AppRole, OrderPaymentStatus, PaymentMethod } from './supabase';
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
 
