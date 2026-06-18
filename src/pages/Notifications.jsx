@@ -111,10 +111,10 @@ const NotificationsView = () => {
   const { items, toggleRead, dismiss, markAllRead } = useNotificationsStore();
   const [filter, setFilter] = useState('all');
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- markAllRead is stable (Zustand)
   useEffect(() => {
     markAllRead();
-  }, []);
+    // markAllRead is a stable Zustand action — intentionally omitted from deps
+  }, [markAllRead]);
 
   const counts = useMemo(
     () => ({
