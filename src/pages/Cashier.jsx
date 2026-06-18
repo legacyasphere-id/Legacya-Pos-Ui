@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {
-  Search, ChevronDown, Plus, Minus, Dot, Clock,
+  Search, ChevronDown, Plus, Minus,
   QrCode, CreditCard, Banknote, Wallet, User, Tag,
-  Trash2, Hash, ArrowRight, AlertCircle, CheckCircle2,
+  Trash2, ArrowRight, AlertCircle, CheckCircle2,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
@@ -11,10 +11,10 @@ import { fmtIDR, fmtIDRShort } from '../utils/formatCurrency';
 import { getCategories, getMenuItems, getDiscounts, getStoreSettings, placeOrder, payOrderCash } from '../lib/api';
 
 const paymentMethods = [
-  { id: 'cash', label: 'Cash', icon: Banknote },
-  { id: 'qris', label: 'QRIS', icon: QrCode },
-  { id: 'card', label: 'Card', icon: CreditCard },
-  { id: 'ewallet', label: 'E-Wallet', icon: Wallet },
+  { id: 'cash',    label: 'Cash',     icon: Banknote  },
+  { id: 'qris',    label: 'QRIS',     icon: QrCode    },
+  { id: 'card',    label: 'Card',     icon: CreditCard },
+  { id: 'ewallet', label: 'E-Wallet', icon: Wallet    },
 ];
 
 const POSCashier = () => {
@@ -27,12 +27,11 @@ const POSCashier = () => {
 
   const [activeCat, setActiveCat] = useState(null);
   const [cart, setCart] = useState([]);
-  const [selectedTable] = useState('3');
   const [discountId, setDiscountId] = useState(null);
   const [payment, setPayment] = useState('cash');
   const [search, setSearch] = useState('');
   const [charging, setCharging] = useState(false);
-  const [toast, setToast] = useState(null); // { kind, text }
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -46,7 +45,7 @@ const POSCashier = () => {
         setDiscounts(discs);
         setTaxBps(settings.tax_rate_bps ?? 1000);
       } catch (e) {
-        setLoadError(e?.message || 'Failed to load menu');
+        setLoadError(e?.message || 'Failed to load products');
       } finally {
         setLoading(false);
       }
@@ -87,16 +86,14 @@ const POSCashier = () => {
     setToast(null);
     try {
       const order = await placeOrder({
-        table_label: selectedTable,
-        customer_type: 'dine_in',
         discount_id: discountId,
         items: cart.map((c) => ({ menu_item_id: c.id, qty: c.qty })),
       });
       if (payment === 'cash') {
         await payOrderCash(order.id, order.grand_total, crypto.randomUUID());
-        setToast({ kind: 'ok', text: `${order.order_no} · Paid (cash) · sent to kitchen` });
+        setToast({ kind: 'ok', text: `${order.order_no} · Paid (cash)` });
       } else {
-        setToast({ kind: 'ok', text: `${order.order_no} · sent to kitchen · awaiting ${payment.toUpperCase()} payment (Midtrans not configured yet)` });
+        setToast({ kind: 'ok', text: `${order.order_no} · awaiting ${payment.toUpperCase()} payment (Midtrans not configured yet)` });
       }
       setCart([]);
       setDiscountId(null);
@@ -120,17 +117,12 @@ const POSCashier = () => {
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[1fr_400px] gap-4 h-full">
-      {/* LEFT — Menu */}
+      {/* LEFT — Products */}
       <Card className="flex flex-col overflow-hidden">
         <div className="p-4 border-b border-line-soft flex items-center gap-3">
-          <button className="flex items-center gap-2 h-11 px-3.5 rounded-xl bg-primary-soft text-primary-text hover:bg-primary-soft-deep transition-colors">
-            <Hash size={15} strokeWidth={2.4} />
-            <span className="text-[14px] font-bold">Table {selectedTable}</span>
-            <ChevronDown size={14} strokeWidth={2.4} />
-          </button>
           <div className="relative flex-1 max-w-md">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search menu…"
+            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products…"
               className="w-full h-11 pl-9 pr-3 rounded-xl bg-app text-[14px] border border-transparent focus:outline-none focus:border-primary focus:bg-card transition-all" />
           </div>
           <Badge tone="success" dot size="lg">Online · Synced</Badge>
@@ -192,14 +184,11 @@ const POSCashier = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[11px] font-semibold text-ink-muted uppercase tracking-wider">Current Order</p>
-              <p className="text-[16px] font-bold text-ink tabular-nums" style={{ fontFamily: 'Plus Jakarta Sans' }}>New order</p>
+              <p className="text-[16px] font-bold text-ink tabular-nums" style={{ fontFamily: 'Plus Jakarta Sans' }}>New sale</p>
             </div>
-            <Badge tone="primary" dot size="lg">Table {selectedTable}</Badge>
           </div>
           <div className="mt-2.5 flex items-center gap-2 text-[12px] text-ink-soft">
-            <User size={12} /> <span>Walk-in customer</span>
-            <Dot size={12} className="text-ink-faint" />
-            <Clock size={12} /> <span className="tabular-nums">Dine-in</span>
+            <User size={12} /> <span className="text-ink-muted">Customer lookup (optional)</span>
           </div>
         </div>
 
@@ -210,7 +199,7 @@ const POSCashier = () => {
                 <span className="text-3xl">🛒</span>
               </div>
               <p className="text-[14px] font-semibold text-ink">Empty order</p>
-              <p className="text-[12.5px] text-ink-muted mt-1">Tap any menu item to start</p>
+              <p className="text-[12.5px] text-ink-muted mt-1">Tap any product to start</p>
             </div>
           ) : (
             <div className="space-y-2">
