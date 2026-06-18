@@ -13,7 +13,7 @@ import { Input } from '../components/ui/Input';
 import { Textarea } from '../components/ui/Textarea';
 
 const settingsSections = [
-  { id:'store',        label:'Store profile',   icon:Store,           group:'Business' },
+  { id:'store',        label:'Business profile', icon:Store,           group:'Business' },
   { id:'payment',      label:'Payment methods', icon:CreditCard,      group:'Business' },
   { id:'receipt',      label:'Receipt',         icon:Receipt,         group:'Business' },
   { id:'team',         label:'Team & roles',    icon:Users,           group:'Operations' },
@@ -28,15 +28,12 @@ const teamMembers = [
   { id:2, name:'Sari Wijaya',   email:'sari@legacya.co',  role:'Manager', branch:'Kemang', status:'active',   avatar:'SW', avatarBg:'from-warning to-warning-text' },
   { id:3, name:'Dewi Lestari',  email:'dewi@legacya.co',  role:'Cashier', branch:'Kemang', status:'active',   avatar:'DL', avatarBg:'from-success to-success-text' },
   { id:4, name:'Rizki Pratama', email:'rizki@legacya.co', role:'Cashier', branch:'Kemang', status:'active',   avatar:'RP', avatarBg:'from-primary-light to-primary-deep' },
-  { id:5, name:'Budi Santoso',  email:'budi@legacya.co',  role:'Kitchen', branch:'Kemang', status:'active',   avatar:'BS', avatarBg:'from-danger to-danger-text' },
-  { id:6, name:'Indah Permata', email:'indah@legacya.co', role:'Kitchen', branch:'Kemang', status:'inactive', avatar:'IP', avatarBg:'from-ink-muted to-ink-soft' },
 ];
 
 const roleMeta = {
   Owner:   { tone:'primary' },
   Manager: { tone:'warning' },
   Cashier: { tone:'success' },
-  Kitchen: { tone:'danger' },
 };
 
 const OptionRow = ({ label, desc, checked, onChange }) => (
@@ -116,16 +113,15 @@ const StoreProfileSection = ({ form, setForm }) => (
     <Card className="p-5">
       <div className="flex items-center gap-2 mb-5">
         <Receipt size={16} className="text-primary-text"/>
-        <h3 className="text-[14px] font-bold text-ink" style={{ fontFamily:'Plus Jakarta Sans' }}>Tax & service</h3>
+        <h3 className="text-[14px] font-bold text-ink" style={{ fontFamily:'Plus Jakarta Sans' }}>Tax</h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input label="Tax rate"       suffix="%" value="10" onChange={() => {}}/>
-        <Input label="Service charge" suffix="%" value="5"  onChange={() => {}}/>
+      <div className="max-w-[200px]">
+        <Input label="Tax rate" suffix="%" value="10" onChange={() => {}}/>
       </div>
       <div className="mt-4 p-3 rounded-lg bg-app flex items-start gap-2.5">
         <Info size={14} className="text-ink-muted mt-0.5"/>
         <p className="text-[12px] text-ink-soft leading-relaxed">
-          Tax and service charges will be calculated automatically on each order. PPN is set per Indonesian regulation.
+          Tax is calculated automatically on each transaction per Indonesian regulation (PPN).
         </p>
       </div>
     </Card>
@@ -225,7 +221,7 @@ const ReceiptSection = ({ form, setForm }) => (
             <p className="text-center text-[10px] text-ink-soft mb-2">{form.receiptHeader2 || ' '}</p>
             <div className="border-t border-dashed border-ink-muted my-2"/>
             <div className="flex justify-between text-[10px] text-ink-soft">
-              <span>ORD-1052</span><span>Table 7</span>
+              <span>ORD-1052</span><span>Walk-in</span>
             </div>
             <div className="flex justify-between text-[10px] text-ink-soft">
               <span>20 May 2026</span><span>11:48 WIB</span>
@@ -238,9 +234,8 @@ const ReceiptSection = ({ form, setForm }) => (
             <div className="border-t border-dashed border-ink-muted my-2"/>
             <div className="flex justify-between text-[10px]"><span>Subtotal</span><span className="tabular-nums">143,000</span></div>
             {form.showTax && <div className="flex justify-between text-[10px]"><span>PPN 10%</span><span className="tabular-nums">14,300</span></div>}
-            <div className="flex justify-between text-[10px]"><span>Service 5%</span><span className="tabular-nums">7,150</span></div>
             <div className="border-t border-tooltip my-1.5"/>
-            <div className="flex justify-between font-bold text-[13px]"><span>TOTAL</span><span className="tabular-nums">Rp 164,450</span></div>
+            <div className="flex justify-between font-bold text-[13px]"><span>TOTAL</span><span className="tabular-nums">Rp 157,300</span></div>
             <div className="border-t border-dashed border-ink-muted my-2"/>
             <p className="text-center text-[10px] leading-relaxed">{form.receiptFooter || ' '}</p>
             {form.showQR && (
