@@ -481,7 +481,7 @@ const DashboardView = () => {
         <StatCard label="Revenue Today"   value={fmtIDR(4_280_000)} delta="+12.4%"   deltaTone="success" helper="vs yesterday"   spark={sparkRevenue} />
         <StatCard label="Orders"          value="142"               delta="+8 today"  deltaTone="success" helper="avg 5.9/hr"    spark={sparkOrders}  sparkColor="#22C55E" />
         <StatCard label="Avg Order Value" value={fmtIDR(30_141)}    delta="-2.1%"    deltaTone="danger"  helper="target Rp 32K" spark={sparkAOV}     sparkColor="#F59E0B" />
-        <StatCard label="Pending Kitchen" value="6"                 delta="2 over 8 min" deltaTone="danger" helper="needs attention" spark={sparkPending} sparkColor="#EF4444" />
+        <StatCard label="Pending Orders"  value="6"                 delta="2 over 8 min" deltaTone="danger" helper="needs attention" spark={sparkPending} sparkColor="#EF4444" />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">

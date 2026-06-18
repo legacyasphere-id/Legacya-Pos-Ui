@@ -65,7 +65,7 @@ export async function payOrderCash(orderId, amount, idempotencyKey) {
   return data;
 }
 
-// ── Orders / Kitchen ─────────────────────────────────────────────────────────
+// ── Orders ────────────────────────────────────────────────────────────────────
 const ORDER_SELECT =
   'id, order_no, table_label, status, payment_status, grand_total, placed_at, cooking_at, ' +
   'order_item(name_snapshot, qty), payment(method, status)';
@@ -76,17 +76,6 @@ export async function getOrders({ limit = 100 } = {}) {
     .select(ORDER_SELECT)
     .order('placed_at', { ascending: false })
     .limit(limit);
-  if (error) throw error;
-  return data ?? [];
-}
-
-// Active kitchen queue: not yet served/paid.
-export async function getKitchenOrders() {
-  const { data, error } = await supabase
-    .from('order')
-    .select('id, order_no, table_label, status, placed_at, cooking_at, order_item(name_snapshot, qty)')
-    .in('status', ['pending', 'cooking'])
-    .order('placed_at', { ascending: true });
   if (error) throw error;
   return data ?? [];
 }
