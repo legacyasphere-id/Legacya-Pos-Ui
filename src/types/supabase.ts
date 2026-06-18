@@ -1,5 +1,4 @@
-// Auto-derived from supabase/migrations/20250101000000_p1_init.sql
-// and 20250101000005_split_payment_status.sql
+// Auto-derived from supabase/migrations/*.sql through 0006_retail_schema.sql
 // Re-generate when schema changes.
 
 export type AppRole = 'owner' | 'manager' | 'cashier';
@@ -177,4 +176,102 @@ export interface ReceiptConfig {
   show_qr: boolean;
   auto_print: boolean;
   updated_at: string;
+}
+
+// ── Retail schema (migration 0006) ────────────────────────────────────────────
+
+export type InventoryMovementKind = 'sale' | 'return' | 'purchase' | 'adjustment' | 'waste';
+export type TransactionStatus = 'open' | 'completed' | 'void';
+
+export interface ProductCategory {
+  id: string;
+  name: string;
+  description: string | null;
+  sort_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Product {
+  id: string;
+  category_id: string | null;
+  name: string;
+  sku: string | null;
+  barcode: string | null;
+  description: string | null;
+  /** Selling price in IDR (integer, no decimal) */
+  price: number;
+  /** Purchase/cost price in IDR for margin tracking */
+  cost_price: number;
+  emoji: string | null;
+  image_url: string | null;
+  is_available: boolean;
+  track_inventory: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+  product_category?: Pick<ProductCategory, 'name'>;
+  inventory?: Inventory | null;
+}
+
+export interface Inventory {
+  id: string;
+  product_id: string;
+  qty_on_hand: number;
+  qty_reserved: number;
+  reorder_point: number;
+  reorder_qty: number;
+  unit: string;
+  last_counted_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface InventoryMovement {
+  id: string;
+  inventory_id: string;
+  kind: InventoryMovementKind;
+  /** Positive = stock in, negative = stock out */
+  qty_delta: number;
+  /** Snapshot of qty_on_hand after this movement */
+  qty_after: number;
+  reference_id: string | null;
+  note: string | null;
+  created_by: string | null;
+  created_at: string;
+}
+
+export interface Transaction {
+  id: string;
+  txn_no: string;
+  cashier_id: string | null;
+  discount_id: string | null;
+  status: TransactionStatus;
+  payment_status: OrderPaymentStatus;
+  subtotal: number;
+  discount_amount: number;
+  tax_amount: number;
+  grand_total: number;
+  note: string | null;
+  void_reason: string | null;
+  voided_at: string | null;
+  voided_by: string | null;
+  completed_at: string | null;
+  created_at: string;
+  updated_at: string;
+  transaction_item?: TransactionItem[];
+}
+
+export interface TransactionItem {
+  id: string;
+  transaction_id: string;
+  product_id: string | null;
+  name_snapshot: string;
+  sku_snapshot: string | null;
+  price_snapshot: number;
+  cost_snapshot: number;
+  qty: number;
+  line_total: number;
+  created_at: string;
 }

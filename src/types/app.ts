@@ -1,7 +1,7 @@
 // Shared application-layer types (view models, store shapes, UI state)
 
 import type React from 'react';
-import type { AppRole, OrderPaymentStatus, PaymentMethod } from './supabase';
+import type { AppRole, OrderPaymentStatus, PaymentMethod, TransactionStatus } from './supabase';
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
 
@@ -80,6 +80,51 @@ export interface Notification {
   timestamp: string;
   isRead: boolean;
   action?: string;
+}
+
+// ── Retail Cashier / Cart (migration 0006) ────────────────────────────────────
+
+export interface RetailCartItem {
+  productId: string;
+  name: string;
+  sku: string | null;
+  price: number;
+  costPrice: number;
+  qty: number;
+  emoji: string | null;
+  trackInventory: boolean;
+}
+
+export interface PlaceTransactionPayload {
+  discount_id?: string | null;
+  items: Array<{ product_id: string; qty: number }>;
+  note?: string | null;
+}
+
+// ── Transaction list view model ───────────────────────────────────────────────
+
+export interface TransactionRow {
+  id: string;
+  txnNo: string;
+  items: Array<{ name: string; qty: number }>;
+  total: number;
+  status: TransactionStatus;
+  paymentStatus: OrderPaymentStatus;
+  payment: PaymentMethod | null;
+  time: string;
+  date: string;
+}
+
+// ── Inventory view model ──────────────────────────────────────────────────────
+
+export interface InventoryAlertRow {
+  productId: string;
+  productName: string;
+  sku: string | null;
+  qtyOnHand: number;
+  reorderPoint: number;
+  unit: string;
+  isLow: boolean;
 }
 
 // ── UI State ─────────────────────────────────────────────────────────────────
