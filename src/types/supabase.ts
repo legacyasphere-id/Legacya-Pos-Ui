@@ -1,8 +1,9 @@
-// Auto-derived from supabase/migrations/*.sql through 0006_retail_schema.sql
-// Re-generate when schema changes.
+// Hand-written application types derived from the live schema.
+// Canonical DB types live in database.generated.ts (auto-generated).
+// Re-run: supabase gen types typescript --project-id dlizxnlwhnbargobvzmi > src/types/database.generated.ts
 
-export type AppRole = 'owner' | 'manager' | 'cashier';
-export type OrderStatus = 'pending' | 'cooking' | 'ready' | 'done' | 'void';
+export type AppRole = 'owner' | 'manager' | 'cashier' | 'kitchen';
+export type OrderStatus = 'pending' | 'cooking' | 'ready' | 'done' | 'paid' | 'void';
 export type OrderPaymentStatus = 'unpaid' | 'paid' | 'refunded' | 'void';
 export type PaymentStatus = 'pending' | 'settled' | 'failed' | 'refunded' | 'expired';
 export type PaymentMethod = 'qris' | 'card' | 'cash' | 'ewallet' | 'bank_transfer';
@@ -207,6 +208,7 @@ export interface Product {
   emoji: string | null;
   image_url: string | null;
   is_available: boolean;
+  archived: boolean;
   track_inventory: boolean;
   sort_order: number;
   created_at: string;
