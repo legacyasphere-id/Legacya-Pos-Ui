@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useId } from 'react';
+import React, { useState, useEffect, useRef, useId } from 'react';
+import { useTour } from '../hooks/useTour';
 import {
   AreaChart,
   Area,
@@ -825,6 +826,12 @@ const DashboardView = () => {
     const t = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(t);
   }, []);
+  const { registerAnchor } = useTour();
+  const statsRef = useRef(null);
+  useEffect(() => {
+    registerAnchor('dashboard-stats', statsRef.current);
+    return () => registerAnchor('dashboard-stats', null);
+  }, [registerAnchor]);
   const greeting =
     now.getHours() < 11 ? 'Good morning' : now.getHours() < 17 ? 'Good afternoon' : 'Good evening';
 
@@ -857,7 +864,7 @@ const DashboardView = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
           label="Revenue Today"
           value={fmtIDR(4_280_000)}

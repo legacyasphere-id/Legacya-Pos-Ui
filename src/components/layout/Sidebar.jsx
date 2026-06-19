@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { Logo } from './Logo';
@@ -7,17 +7,36 @@ import { useUiStore } from '../../store/ui.store';
 import { useNotificationsStore } from '../../store/notifications.store';
 import { useAuthStore, initialsOf } from '../../store/auth.store';
 import { tokens } from '../../data/tokens';
+import { useTour } from '../../hooks/useTour';
+
+// Nav items that serve as tour anchors
+const TOUR_ANCHOR_IDS = ['products', 'inventory', 'cashier', 'settings'];
 
 export const Sidebar = () => {
   const { sidebarCollapsed: collapsed, toggleSidebar } = useUiStore();
   const location = useLocation();
-  const unreadCount = useNotificationsStore((state) =>
-    state.items.filter((n) => !n.isRead).length
-  );
+  const unreadCount = useNotificationsStore((state) => state.items.filter((n) => !n.isRead).length);
   const { session, profile } = useAuthStore();
+  const { registerAnchor } = useTour();
+
+  // Refs for tour anchor elements
+  const sidebarElRef = useRef(null);
+  const navItemRefs = useRef({});
+
+  useEffect(() => {
+    registerAnchor('sidebar-nav', sidebarElRef.current);
+    TOUR_ANCHOR_IDS.forEach((id) => {
+      registerAnchor(`${id}-nav`, navItemRefs.current[id] ?? null);
+    });
+    return () => {
+      registerAnchor('sidebar-nav', null);
+      TOUR_ANCHOR_IDS.forEach((id) => registerAnchor(`${id}-nav`, null));
+    };
+  }, [registerAnchor]);
 
   return (
     <aside
+      ref={sidebarElRef}
       className="relative bg-sidebar border-r border-line flex flex-col transition-all duration-200 ease-out shrink-0"
       style={{ width: collapsed ? 76 : 248 }}
     >
@@ -43,6 +62,13 @@ export const Sidebar = () => {
                 return (
                   <Link
                     key={item.id}
+                    ref={
+                      TOUR_ANCHOR_IDS.includes(item.id)
+                        ? (el) => {
+                            navItemRefs.current[item.id] = el;
+                          }
+                        : undefined
+                    }
                     to={item.path}
                     title={collapsed ? item.label : undefined}
                     className={`relative w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13.5px] font-medium transition-all duration-150 ${
@@ -63,9 +89,7 @@ export const Sidebar = () => {
                             {badge}
                           </span>
                         )}
-                        {item.alert && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-warning" />
-                        )}
+                        {item.alert && <span className="w-1.5 h-1.5 rounded-full bg-warning" />}
                       </>
                     )}
                     {collapsed && (badge > 0 || item.alert) && (
@@ -108,9 +132,11 @@ export const Sidebar = () => {
         className="absolute -right-3 top-[58px] w-6 h-6 rounded-full bg-card border border-line flex items-center justify-center hover:border-primary hover:text-primary text-ink-soft transition-colors z-10"
         style={{ boxShadow: tokens.shadow.sm }}
       >
-        {collapsed
-          ? <ChevronsRight size={12} strokeWidth={2.5} />
-          : <ChevronsLeft size={12} strokeWidth={2.5} />}
+        {collapsed ? (
+          <ChevronsRight size={12} strokeWidth={2.5} />
+        ) : (
+          <ChevronsLeft size={12} strokeWidth={2.5} />
+        )}
       </button>
     </aside>
   );

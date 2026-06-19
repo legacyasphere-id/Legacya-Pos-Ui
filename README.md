@@ -1,142 +1,145 @@
 # Legacya POS
 
-> Retail Point-of-Sale SaaS — built by [Legacya Sphere](https://github.com/legacyasphere-id)
+Production-quality retail Point of Sale system built with React + Supabase.
 
-[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white&style=flat-square)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white&style=flat-square)](https://www.typescriptlang.org)
-[![Vite](https://img.shields.io/badge/Vite-Ready-646CFF?logo=vite&logoColor=white&style=flat-square)](https://vitejs.dev)
-[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase&logoColor=white&style=flat-square)](https://supabase.com)
-[![Vercel](https://img.shields.io/badge/Deployed-Vercel-000?logo=vercel&logoColor=white&style=flat-square)](https://legacya-pos-ui.vercel.app)
 [![CI](https://img.shields.io/github/actions/workflow/status/legacyasphere-id/Legacya-Pos-Ui/ci.yml?branch=main&label=CI&style=flat-square)](https://github.com/legacyasphere-id/Legacya-Pos-Ui/actions)
-
-**[Live Demo →](https://legacya-pos-ui.vercel.app)**
-
----
-
-## What This Is
-
-Legacya POS is a production-grade **General Retail POS SaaS** — not a mockup, not a portfolio demo. It is being built as a real, deployable product by Legacya Sphere studio.
-
-The system handles the full retail transaction lifecycle: product catalog, inventory tracking, cashier checkout, and reporting — across multiple user roles with proper auth and RLS.
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white&style=flat-square)](https://www.typescriptlang.org)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase&logoColor=white&style=flat-square)](https://supabase.com)
+[![Vercel](https://img.shields.io/badge/Deployed-Vercel-000?logo=vercel&logoColor=white&style=flat-square)](https://legacya-pos-ui-129q.vercel.app)
 
 ---
 
-## Current Status
+## Live Demo
 
-| Sprint | Focus | Status |
-|---|---|---|
-| Pre-Sprint 0 | Database backup, rollback plan, soft-deprecation | ✅ Done |
-| Sprint 0 | TypeScript strict, CI/CD, ESLint, Vitest, Husky | ✅ Done |
-| Sprint 1 | Retail schema (DB), ProductService, TransactionService | 🔄 In Progress |
-| Sprint 2 | POS cashier UI → live data, product management screens | Planned |
-| Sprint 3 | Inventory management, reporting, analytics | Planned |
+**[https://legacya-pos-ui-129q.vercel.app](https://legacya-pos-ui-129q.vercel.app)**
+
+Contact repo owner for demo credentials.
+
+---
+
+## What it does
+
+Legacya POS handles the complete retail transaction lifecycle across three roles: Owner, Cashier, and Kitchen. Owners manage products, inventory, and store settings; cashiers run atomic checkout transactions; kitchen staff track order fulfillment in real time via Supabase Realtime. The system enforces Row-Level Security on every table, tracks inventory through an append-only movement ledger, and processes transactions via a single `retail_checkout` RPC that atomically inserts the sale, line items, and stock adjustments in one database call.
 
 ---
 
 ## Tech Stack
 
-| Layer | Choice | Notes |
-|---|---|---|
-| UI | React 18 + Vite | TypeScript strict mode |
-| Styling | Tailwind CSS | Utility-first, no component library bloat |
-| Database | Supabase (PostgreSQL) | Row-Level Security on all tables |
-| Auth | Supabase Auth | Multi-role: owner, manager, cashier |
-| Deploy | Vercel | Auto-deploy on push to `main` |
-| CI | GitHub Actions | lint → type-check → test → build |
-| Testing | Vitest + jest-dom | 17+ tests, must stay green |
-
----
-
-## User Roles
-
-| Role | Access |
+| Layer | Technology |
 |---|---|
-| **Owner** | Full access — products, inventory, reports, settings |
-| **Manager** | Products, inventory, transactions, reports |
-| **Cashier** | POS checkout, view transactions |
+| UI | React 18 + Vite 5 |
+| Language | TypeScript (strict mode) |
+| Styling | Tailwind CSS |
+| Database | Supabase (PostgreSQL + RLS) |
+| Realtime | Supabase Realtime |
+| Auth | Supabase Auth |
+| State | Zustand |
+| Routing | React Router v6 |
+| Charts | Recharts |
+| Testing | Vitest + React Testing Library |
+| E2E | Playwright |
+| CI/CD | GitHub Actions + Vercel |
+| Git hooks | Husky + lint-staged |
 
 ---
 
-## Data Model (Sprint 1)
+## Features
 
-### Retail Tables (live on Supabase)
-```
-product_category    → product catalog categories
-product             → SKU, barcode, price, cost, inventory flag
-inventory           → qty_on_hand, qty_reserved, reorder_point
-inventory_movement  → append-only ledger (sale/purchase/adjustment/waste)
-transaction         → retail sales (TXN-YYYYMMDD-NNNN format)
-transaction_item    → line items with price/name snapshot at time of sale
-```
-
-All tables have Row-Level Security enabled. Inventory movements are written via `SECURITY DEFINER` functions only — no direct authenticated inserts.
-
-### Legacy Tables (soft-deprecated)
-```
-category    → replaced by product_category
-menu_item   → replaced by product
-ingredient  → replaced by inventory
-order       → replaced by transaction
-order_item  → replaced by transaction_item
-```
-Legacy tables are retained until data migration is verified. Drop only after full transition.
+- Product & category management
+- Inventory tracking with movement ledger
+- Atomic checkout via `retail_checkout` RPC
+- Real-time kitchen display
+- Owner onboarding tour (first-time visit)
+- Role-based access (Owner / Cashier / Kitchen)
+- Tax + discount support
+- Transaction history
 
 ---
 
-## Project Structure
+## Screens
 
-```
-legacya-pos-ui/
-├── .github/workflows/     # CI pipeline (lint, type-check, test, build)
-├── docs/
-│   ├── migrations/        # DATABASE_BACKUP_PLAN.md, ROLLBACK_PLAN.md
-│   ├── SPRINT_0_COMPLETION.md
-│   └── environment-strategy.md
-├── src/
-│   ├── services/          # productService, transactionService (Sprint 1)
-│   ├── types/             # supabase.ts (generated), app.ts
-│   └── utils/             # formatCurrency, formatTime, cn
-├── supabase/
-│   └── migrations/        # SQL migration files
-├── artifacts/             # Legacy UI screens (portfolio reference)
-├── CONTEXT.md             # Project brain — read by AI Code
-└── .npmrc                 # legacy-peer-deps=true (resolves ESLint peer dep)
-```
+| Screen | Role | Status |
+|---|---|---|
+| Dashboard | Owner | Live |
+| POS Cashier | Cashier | Live |
+| Products | Owner | Live |
+| Inventory | Owner | Live |
+| Orders | Kitchen | Live |
+| Analytics | Owner | In Progress |
+| Settings | Owner | Live |
+| Notifications | All | Live |
+| Login | Public | Live |
 
 ---
 
-## Safety Rules
+## Getting Started
 
-> These are hard constraints, not guidelines.
+### Prerequisites
 
-1. **No DROP TABLE without a written rollback plan.** See `docs/migrations/ROLLBACK_PLAN.md`.
-2. **Soft-deprecate before hard delete.** SQL comments first, drop only after verification.
-3. **CI must be green before any merge to `main`.**
-4. **TypeScript strict mode.** `tsc --noEmit` must pass on every commit.
+- Node.js 18+
+- A Supabase project with the retail schema applied
 
----
-
-## Local Development
+### Installation
 
 ```bash
 git clone https://github.com/legacyasphere-id/Legacya-Pos-Ui.git
 cd Legacya-Pos-Ui
 npm install
-cp .env.example .env.local   # add your Supabase URL + anon key
-npm run dev
 ```
 
-**Required env vars:**
+### Environment Variables
+
+Copy `.env.example` to `.env.local` and fill in:
+
 ```
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_MIDTRANS_CLIENT_KEY=your-midtrans-client-key
+VITE_MIDTRANS_SNAP_URL=https://app.sandbox.midtrans.com/snap/snap.js
+VITE_APP_ENV=development
+```
+
+### Run locally
+
+```bash
+npm run dev
 ```
 
 ---
 
-## Built by Legacya Sphere
+## Running Tests
 
-Legacya Sphere is a studio that builds systems for brands and businesses.  
-This product is built with the **Sphere Method v2.1** — an internal framework for AI-assisted product development.
+```bash
+npm test              # 97 tests — unit + integration (Vitest)
+npm run type-check    # tsc --noEmit (strict)
+npm run build         # production build via Vite
+```
 
-→ [github.com/legacyasphere-id](https://github.com/legacyasphere-id)
+CI runs all three on every push. Merges to `main` require a green pipeline.
+
+---
+
+## Architecture
+
+**Service layer** — all data access goes through `productService`, `inventoryService`, and `transactionService`. Pages never call the Supabase client directly; they call typed service methods that return domain objects.
+
+**Atomic RPCs** — `retail_checkout` inserts a transaction, its line items, and inventory adjustments in a single plpgsql transaction. `retail_adjust_stock` writes both the inventory row update and the movement ledger entry atomically. No partial writes.
+
+**Anchor-based tour system** — the onboarding tour uses a `registerAnchor(id, el)` pattern. UI components register their DOM nodes by ID on mount and deregister on unmount. The tour engine reads live `getBoundingClientRect()` values from that registry to position the spotlight — no hardcoded selectors.
+
+**RLS enforcement** — every Supabase table has Row-Level Security enabled. Role checks happen at the database level via `auth.jwt() -> role`, not just in the UI.
+
+---
+
+## Roadmap
+
+- [ ] Analytics screen wired to live data
+- [ ] Notifications system
+- [ ] Cashier + Kitchen onboarding tours
+- [ ] Multi-store support
+
+---
+
+## License
+
+MIT
