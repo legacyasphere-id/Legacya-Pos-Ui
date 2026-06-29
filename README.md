@@ -142,4 +142,4 @@ CI runs all three on every push. Merges to `main` require a green pipeline.
 
 ## License
 
-MIT
+MIT © [Yoga Pratama Effendi](https://github.com/legacyasphere-id) — Legacya Sphere

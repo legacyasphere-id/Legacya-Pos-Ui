@@ -2,6 +2,7 @@
   "name": "legacya-pos-ui",
   "private": true,
   "version": "0.1.0",
+  "author": "Yoga Pratama Effendi <yogapratamaeffendi11@gmail.com> (Legacya Sphere)",
   "type": "module",
   "scripts": {
     "dev": "vite",
